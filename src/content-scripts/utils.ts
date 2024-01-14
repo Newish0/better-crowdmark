@@ -2,42 +2,66 @@ import * as htmlToImage from "html-to-image";
 
 import markdownit from "markdown-it";
 import hljs from "highlight.js";
+import mermaid from "mermaid";
+
+import markdownItTextualUml from "markdown-it-textual-uml";
 
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
 
-export const injectStyle = (doc: Document, css: string) => {
+mermaid.initialize({ startOnLoad: false });
+
+/**
+ *
+ * @param css
+ * @param doc
+ * @param target
+ * @returns function to revert the operation (aka clean up function)
+ */
+export const injectStyle = (css: string, doc: Document = document, target?: Element) => {
     const styleElement = doc.createElement("style");
     styleElement.appendChild(doc.createTextNode(css));
-    const head = doc.head || doc.getElementsByTagName("head")[0];
-    head.appendChild(styleElement);
+    const destination = target || doc.head || doc.getElementsByTagName("head")[0];
+    destination.appendChild(styleElement);
+
+    // Revert function
+    return () => {
+        destination.removeChild(styleElement);
+    };
 };
 
-export const imageFromHTML = (html: string | HTMLElement, cssStyles: string[] = []) => {
+/**
+ *
+ * @param html
+ * @param cssStyles
+ * @returns PNG data URL
+ */
+export const imageFromHTML = (
+    html: string | HTMLElement,
+    { cssStyles = [] }: { cssStyles?: string[] } = {}
+) => {
     /**
      * Converts HTML image in an isolated context/document
      * @param htmlStr
      * @returns
      */
     const htmlStrToImg = async (htmlStr: string) => {
-        const iframe = document.createElement("iframe");
-        document.body.appendChild(iframe);
-        iframe.contentWindow?.document.open();
-        iframe.contentWindow?.document.write(htmlStr);
-        iframe.contentWindow?.document.close();
+        const container = document.createElement("div");
+        container.innerHTML = htmlStr;
 
-        Object.assign(iframe.style, {
-            position: "fixed",
+        Object.assign(container.style, {
             width: "8.5in",
-            height: iframe.contentWindow?.document.documentElement.scrollHeight + "px",
-            top: 0,
         });
 
-        const body = iframe.contentWindow?.document.body;
-        if (!body) return null;
-        for (const style of cssStyles) injectStyle(iframe.contentWindow.document, style);
-        const dataUrl = await htmlToImage.toPng(body);
-        // document.body.removeChild(iframe); // cleanup
+        document.body.appendChild(container);
+
+        const styleCleanupFuncs = cssStyles.map((style) => injectStyle(style));
+        await mermaid.run();
+        await new Promise<void>((r) => setTimeout(r, 1000));
+        const dataUrl = await htmlToImage.toPng(container);
+
+        // TODO: add back cleanup
+        // styleCleanupFuncs.forEach((func) => func());
         return dataUrl;
     };
 
@@ -48,6 +72,11 @@ export const imageFromHTML = (html: string | HTMLElement, cssStyles: string[] = 
     }
 };
 
+/**
+ *
+ * @param mdStr
+ * @returns PNG data blob
+ */
 export const markdownToImg = async (mdStr: string) => {
     const md = markdownit({
         html: true,
@@ -63,13 +92,18 @@ export const markdownToImg = async (mdStr: string) => {
             return ""; // use external default escaping
         },
     });
+
+    md.use(markdownItTextualUml);
+
     const container = document.createElement("div");
     container.classList.add("markdown-body");
     const htmlStr = md.render(mdStr);
     console.log("MADE IT!", htmlStr);
     container.innerHTML = htmlStr;
 
-    const dataUrl = await imageFromHTML(container, [hljsCss, ghMdCss]);
+    const dataUrl = await imageFromHTML(container, {
+        cssStyles: [hljsCss, ghMdCss],
+    });
     if (!dataUrl) throw new Error("Failed to convert html to image. Got null");
     console.log("DATA URL", dataUrl);
     return dataURLToBlob(dataUrl);
