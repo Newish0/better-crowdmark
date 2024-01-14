@@ -1,1 +1,1 @@
-declare module "markdown-it-mermaid";
+declare module "markdown-it-textual-uml";

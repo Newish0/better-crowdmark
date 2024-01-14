@@ -6,19 +6,24 @@ import {
     removeExtension,
 } from "./utils";
 
+/** The target elements this Better Crowdmark should run on */
+const BT_TARGETS: string[] = [
+    "label.assigned-submit__upload-clickzone:not(.BT-zone-modified)", // Crowdmark app input
+    ".BT-dev-test-input-container:not(.BT-zone-modified)", // Development test page input
+];
+
 // TODO: Need to move this to background script
 const txtToImg = async (txtStr: string) => {};
 
 const parseMarkdownFile = async (markdownFile: File) => {
     const mdImgBlob = await markdownToImg(await markdownFile.text());
-    return new File([mdImgBlob], `${removeExtension(markdownFile.name)}.md`);
+    return new File([mdImgBlob], `${removeExtension(markdownFile.name)}.png`);
 };
 
 const parseTextFile = (textFile: File) => {
     // Implement the logic to parse text file
     console.log("Parsing text file:", textFile.name);
     // Add the parsed content or any other relevant data to parsedFiles array
-
     return textFile;
 };
 
@@ -54,16 +59,12 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
     for (const f of files) dataContainer.items.add(f);
     targetInput.files = dataContainer.files;
     const changeEvt = new Event("change");
-
-    // TMP REMOVED
-    // targetInput.dispatchEvent(changeEvt);
+    targetInput.dispatchEvent(changeEvt);
 };
 
 const injectOverlay = () => {
     // Get list of new zones
-    const submitZones = document.querySelectorAll(
-        "label.assigned-submit__upload-clickzone:not(.BT-zone-modified)"
-    );
+    const submitZones = document.querySelectorAll(BT_TARGETS.join(","));
     console.log(submitZones);
 
     submitZones.forEach((zoneEln) => {
