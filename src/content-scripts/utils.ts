@@ -5,9 +5,11 @@ import hljs from "highlight.js";
 import mermaid from "mermaid";
 
 import markdownItTextualUml from "markdown-it-textual-uml";
+import mk, { renderBatch as renderMKbatch } from "@/lib/markdow-it-katex";
 
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
+import katexCss from "katex/dist/katex.min.css?raw";
 
 mermaid.initialize({ startOnLoad: false });
 
@@ -56,7 +58,8 @@ export const imageFromHTML = (
         document.body.appendChild(container);
 
         const styleCleanupFuncs = cssStyles.map((style) => injectStyle(style));
-        await mermaid.run();
+        await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
+        await renderMKbatch();
         await new Promise<void>((r) => setTimeout(r, 1000));
         const dataUrl = await htmlToImage.toPng(container);
 
@@ -94,6 +97,7 @@ export const markdownToImg = async (mdStr: string) => {
     });
 
     md.use(markdownItTextualUml);
+    md.use(mk);
 
     const container = document.createElement("div");
     container.classList.add("markdown-body");
@@ -102,7 +106,7 @@ export const markdownToImg = async (mdStr: string) => {
     container.innerHTML = htmlStr;
 
     const dataUrl = await imageFromHTML(container, {
-        cssStyles: [hljsCss, ghMdCss],
+        cssStyles: [hljsCss, ghMdCss, katexCss],
     });
     if (!dataUrl) throw new Error("Failed to convert html to image. Got null");
     console.log("DATA URL", dataUrl);
