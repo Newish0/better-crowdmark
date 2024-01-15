@@ -73,6 +73,9 @@ const injectOverlay = () => {
         zone.classList.add("BT-zone-modified");
 
         const oriInput: HTMLInputElement | null = zone.querySelector("input[type='file']");
+        const titleText: HTMLSpanElement | null = zone.querySelector(".u-default-text");
+
+        if (titleText) titleText.textContent = "Add images, pdf, md, txt... files";
 
         const overlay = document.createElement("div");
         overlay.classList.add("BC-overlay");
