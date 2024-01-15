@@ -108,8 +108,8 @@ export const imageFromHTML = (
             iframe.contentWindow?.addEventListener("load", async () => {
                 before.forEach((beforeMW) => beforeMW(iframe.contentWindow?.document));
 
-                iframe.style.height = body.getBoundingClientRect().height + "px"; // Ensure full height is visible
                 body.style.padding = margin;
+                iframe.style.height = body.getBoundingClientRect().height + "px"; // Ensure full height is visible
                 body.style.backgroundColor = "#fff";
 
                 const dataUrl = await htmlToImage.toPng(body, {
