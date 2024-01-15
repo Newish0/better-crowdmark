@@ -1,17 +1,35 @@
-import { useEffect } from "react";
+import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
+import browser from "webextension-polyfill";
 
 export default function () {
-    useEffect(() => {
-        console.log("Hello from the popup!");
-    }, []);
+    const manifest = browser.runtime.getManifest();
 
     return (
-        <div>
-            <img src="/icon-with-shadow.svg" />
-            <h1>vite-plugin-web-extension!!</h1>
-            <p className="text-2xl bg-red-500">
-                Template: <code>react-ts</code>
-            </p>
+        <div className="hero min-h-screen bg-base-200">
+            <div className="hero-content text-center">
+                <div className="max-w-md">
+                    <img src="/icon-with-shadow.svg" className="w-full m-auto" />
+
+                    <h1 className="text-3xl font-bold">Better Crowdmark</h1>
+                    <p>version {manifest.version}</p>
+                    <p className="py-6 neutral-content">Less time wasted in homework upload.</p>
+
+                    <ul className="menu bg-base-200 w-full">
+                        <li>
+                            <a>
+                                <IconSettings />
+                                Settings
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <IconInfoSquare />
+                                About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     );
 }

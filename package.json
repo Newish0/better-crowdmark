@@ -10,6 +10,7 @@
     "build": "tsc && vite build"
   },
   "dependencies": {
+    "@tabler/icons-react": "^2.46.0",
     "@vscode/markdown-it-katex": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
