@@ -35,7 +35,6 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
 const injectOverlay = () => {
     // Get list of new zones
     const submitZones = document.querySelectorAll(BC_TARGETS.join(","));
-    console.log(submitZones);
 
     submitZones.forEach((zoneEln) => {
         // const zone = zoneEln as HTMLElement;
@@ -61,16 +60,13 @@ const injectOverlay = () => {
 
         // TODO: Lock input while running/parsing
         const handleFiles = async (files: FileList) => {
-            console.log("HANDLE FILES", files);
             const parsedFiles = await parseFiles(files);
-            console.log("PARSED FILES", parsedFiles);
             if (oriInput) transferData([...(oriInput.files ?? []), ...parsedFiles], oriInput);
         };
 
         bcInput.addEventListener("drop", (evt) => {
             evt.preventDefault();
             evt.stopPropagation();
-            console.log("FILE DROP");
             evt.dataTransfer?.files && handleFiles(evt.dataTransfer.files);
         });
 

@@ -14,8 +14,7 @@ export default class ModuleManager {
 
     public static load(bcModule: BCModule) {
         const moduleInfo = bcModule();
-
-        console.log("LOAD BC-MODULE", moduleInfo);
+        console.debug("[Better Crowdmark] Load Module", moduleInfo.name);
 
         for (const ext of moduleInfo.extensions) {
             if (ModuleManager.extParseMap.has(ext)) {

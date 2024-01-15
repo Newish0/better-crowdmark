@@ -42,7 +42,6 @@ const markdownToImg = async (mdStr: string) => {
 
     container.classList.add("markdown-body");
     const htmlStr = md.render(mdStr);
-    console.log("MADE IT!", htmlStr);
     container.innerHTML = htmlStr;
 
     document.body.appendChild(container);
@@ -58,7 +57,6 @@ const markdownToImg = async (mdStr: string) => {
         ],
     });
     if (!dataUrl) throw new Error("Failed to convert html to image. Got null");
-    console.log("DATA URL", dataUrl);
     return dataURLToBlob(dataUrl);
 };
 
