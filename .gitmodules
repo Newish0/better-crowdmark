@@ -1,0 +1,3 @@
+[submodule "src/lib/better-crowdmark-markdown-it-katex"]
+	path = src/lib/markdown-it-katex
+	url = https://github.com/Newish0/better-crowdmark-markdown-it-katex.git

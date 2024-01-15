@@ -5,7 +5,7 @@ import hljs from "highlight.js";
 import mermaid from "mermaid";
 
 import markdownItTextualUml from "markdown-it-textual-uml";
-import mk, { renderBatch as renderMKbatch } from "@/lib/markdow-it-katex";
+import mk, { renderBatch as renderMKbatch } from "@/lib/markdown-it-katex";
 
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
@@ -90,9 +90,11 @@ export const imageFromHTML = (
                 before.forEach((beforeMW) => beforeMW(iframe.contentWindow?.document));
 
                 iframe.style.height = body.getBoundingClientRect().height + "px"; // Ensure full height is visible
-                body.style.margin = margin;
+                body.style.padding = margin;
 
-                const dataUrl = await htmlToImage.toPng(body);
+                const dataUrl = await htmlToImage.toPng(body, {
+                    pixelRatio: 2,
+                });
                 after.forEach((afterMW) => afterMW(iframe.contentWindow?.document));
                 r(dataUrl);
             });

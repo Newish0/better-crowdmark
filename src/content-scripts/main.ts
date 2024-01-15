@@ -6,7 +6,7 @@ import {
     removeExtension,
 } from "./utils";
 
-/** The target elements this Better Crowdmark should run on */
+/** The target elements Better Crowdmark should run on */
 const BT_TARGETS: string[] = [
     "label.assigned-submit__upload-clickzone:not(.BT-zone-modified)", // Crowdmark app input
     ".BT-dev-test-input-container:not(.BT-zone-modified)", // Development test page input
@@ -105,10 +105,10 @@ const injectOverlay = () => {
         // TODO: Move styles to CSS
         Object.assign(overlay.style, {
             position: "absolute",
-            top: "-1rem",
-            left: "-1rem",
-            width: "calc(100% + 2rem)",
-            height: "calc(100% + 2rem)",
+            top: "-5px",
+            left: "-5px",
+            width: "calc(100% + 10px)",
+            height: "calc(100% + 10px)",
         });
 
         Object.assign(bcInput.style, {
@@ -117,7 +117,7 @@ const injectOverlay = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            opacity: 0.5,
+            opacity: 0,
         });
 
         overlay.appendChild(bcInput);
