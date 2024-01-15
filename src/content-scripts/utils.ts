@@ -32,6 +32,16 @@ export const injectStyle = (css: string, doc: Document = document, target?: Elem
     };
 };
 
+type ImageFromHTMLMiddleware = (doc?: Document) => void;
+
+type ImageFromHTMLOptions = {
+    cssStyles?: string[];
+    before?: ImageFromHTMLMiddleware[];
+    after?: ImageFromHTMLMiddleware[];
+    width?: string;
+    margin?: string;
+};
+
 /**
  *
  * @param html
@@ -40,7 +50,13 @@ export const injectStyle = (css: string, doc: Document = document, target?: Elem
  */
 export const imageFromHTML = (
     html: string | HTMLElement,
-    { cssStyles = [] }: { cssStyles?: string[] } = {}
+    {
+        cssStyles = [],
+        before = [],
+        after = [],
+        width = "8.5in",
+        margin = "0.5in",
+    }: ImageFromHTMLOptions = {}
 ) => {
     /**
      * Converts HTML image in an isolated context/document
@@ -48,24 +64,39 @@ export const imageFromHTML = (
      * @returns
      */
     const htmlStrToImg = async (htmlStr: string) => {
-        const container = document.createElement("div");
-        container.innerHTML = htmlStr;
+        const iframe = document.createElement("iframe");
+        document.body.appendChild(iframe);
+        iframe.contentWindow?.document.open();
+        iframe.contentWindow?.document.write(htmlStr);
+        iframe.contentWindow?.document.close();
 
-        Object.assign(container.style, {
-            width: "8.5in",
+        Object.assign(iframe.style, {
+            width,
+            margin: 0,
+            padding: 0,
+            border: 0,
+            fontSize: `100%`,
+            font: `inherit`,
+            verticalAlign: `baseline`,
         });
 
-        document.body.appendChild(container);
+        cssStyles.map((style) => injectStyle(style, iframe.contentWindow?.document));
 
-        const styleCleanupFuncs = cssStyles.map((style) => injectStyle(style));
-        await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
-        await renderMKbatch();
-        await new Promise<void>((r) => setTimeout(r, 1000));
-        const dataUrl = await htmlToImage.toPng(container);
+        const body = iframe.contentDocument?.body;
+        if (!body) return null;
 
-        // TODO: add back cleanup
-        // styleCleanupFuncs.forEach((func) => func());
-        return dataUrl;
+        return new Promise<string>((r) => {
+            iframe.contentWindow?.addEventListener("load", async () => {
+                before.forEach((beforeMW) => beforeMW(iframe.contentWindow?.document));
+
+                iframe.style.height = body.getBoundingClientRect().height + "px"; // Ensure full height is visible
+                body.style.margin = margin;
+
+                const dataUrl = await htmlToImage.toPng(body);
+                after.forEach((afterMW) => afterMW(iframe.contentWindow?.document));
+                r(dataUrl);
+            });
+        });
     };
 
     if (typeof html === "string") {
@@ -100,10 +131,16 @@ export const markdownToImg = async (mdStr: string) => {
     md.use(mk);
 
     const container = document.createElement("div");
+
     container.classList.add("markdown-body");
     const htmlStr = md.render(mdStr);
     console.log("MADE IT!", htmlStr);
     container.innerHTML = htmlStr;
+
+    document.body.appendChild(container);
+
+    await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
+    await renderMKbatch();
 
     const dataUrl = await imageFromHTML(container, {
         cssStyles: [hljsCss, ghMdCss, katexCss],
