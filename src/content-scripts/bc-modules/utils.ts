@@ -109,7 +109,7 @@ export const imageFromHTML = (
                 before.forEach((beforeMW) => beforeMW(iframe.contentWindow?.document));
 
                 body.style.padding = margin;
-                iframe.style.height = body.getBoundingClientRect().height + "px"; // Ensure full height is visible
+                iframe.style.height = `calc(${body.getBoundingClientRect().height}px + ${margin} * 2)`; // Ensure full height is visible
                 body.style.backgroundColor = "#fff";
 
                 const dataUrl = await htmlToImage.toPng(body, {
@@ -118,6 +118,7 @@ export const imageFromHTML = (
                 });
                 after.forEach((afterMW) => afterMW(iframe.contentWindow?.document));
                 r(dataUrl);
+                document.body.removeChild(iframe);
             });
         });
     };
