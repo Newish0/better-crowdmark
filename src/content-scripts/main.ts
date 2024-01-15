@@ -1,31 +1,14 @@
-import {
-    dataURLToBlob,
-    getExtension,
-    imageFromHTML,
-    markdownToImg,
-    removeExtension,
-} from "./utils";
+import ModuleManager from "./bc-modules/ModuleManager";
+import markdown from "./bc-modules/markdown";
 
 /** The target elements Better Crowdmark should run on */
-const BT_TARGETS: string[] = [
+const BC_TARGETS: string[] = [
     "label.assigned-submit__upload-clickzone:not(.BT-zone-modified)", // Crowdmark app input
     ".BT-dev-test-input-container:not(.BT-zone-modified)", // Development test page input
 ];
 
-// TODO: Need to move this to background script
-const txtToImg = async (txtStr: string) => {};
-
-const parseMarkdownFile = async (markdownFile: File) => {
-    const mdImgBlob = await markdownToImg(await markdownFile.text());
-    return new File([mdImgBlob], `${removeExtension(markdownFile.name)}.png`);
-};
-
-const parseTextFile = (textFile: File) => {
-    // Implement the logic to parse text file
-    console.log("Parsing text file:", textFile.name);
-    // Add the parsed content or any other relevant data to parsedFiles array
-    return textFile;
-};
+ModuleManager.init();
+ModuleManager.load(markdown);
 
 /**
  *
@@ -33,24 +16,7 @@ const parseTextFile = (textFile: File) => {
  * @returns
  */
 const parseFiles = async (files: FileList) => {
-    const parsedFiles = Array.from(files).map(async (f) => {
-        switch (getExtension(f.name)) {
-            case ".jpeg":
-            case ".jpg":
-            case ".png":
-            case ".gif":
-            case ".webp":
-            case ".pdf":
-                return f;
-            case ".md":
-                return parseMarkdownFile(f);
-            case ".txt":
-                return parseTextFile(f);
-            default:
-                throw new Error("Unsupported file");
-        }
-    });
-
+    const parsedFiles = Array.from(files).map((f) => ModuleManager.parse(f));
     return await Promise.all(parsedFiles);
 };
 
@@ -64,7 +30,7 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
 
 const injectOverlay = () => {
     // Get list of new zones
-    const submitZones = document.querySelectorAll(BT_TARGETS.join(","));
+    const submitZones = document.querySelectorAll(BC_TARGETS.join(","));
     console.log(submitZones);
 
     submitZones.forEach((zoneEln) => {
@@ -75,7 +41,11 @@ const injectOverlay = () => {
         const oriInput: HTMLInputElement | null = zone.querySelector("input[type='file']");
         const titleText: HTMLSpanElement | null = zone.querySelector(".u-default-text");
 
-        if (titleText) titleText.textContent = "Add images, pdf, md, txt... files";
+        if (titleText)
+            titleText.textContent = `Add images, pdf, ${ModuleManager.supportedFormats(
+                true,
+                false
+            ).join(", ")}... files`;
 
         const overlay = document.createElement("div");
         overlay.classList.add("BC-overlay");
