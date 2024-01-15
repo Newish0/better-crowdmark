@@ -16,13 +16,13 @@ export default function () {
 
                     <ul className="menu bg-base-200 w-full">
                         <li>
-                            <a>
+                            <a href="./options.html#settings" target="_blank">
                                 <IconSettings />
                                 Settings
                             </a>
                         </li>
                         <li>
-                            <a>
+                            <a href="./options.html#about" target="_blank">
                                 <IconInfoSquare />
                                 About
                             </a>

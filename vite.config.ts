@@ -21,6 +21,7 @@ export default defineConfig({
         react(),
         webExtension({
             manifest: generateManifest,
+            additionalInputs: ["src/options.html", "src/options.tsx"],
         }),
     ],
     resolve: {
