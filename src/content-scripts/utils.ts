@@ -9,9 +9,22 @@ import mk, { renderBatch as renderMKbatch } from "@/lib/markdown-it-katex";
 
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
-import katexCss from "katex/dist/katex.min.css?raw";
 
 mermaid.initialize({ startOnLoad: false });
+
+/**
+ * Checks if string is a URL
+ *
+ * @param str
+ * @returns
+ */
+export const validURL = (str: string) => {
+    try {
+        return new URL(str) && true;
+    } catch (e) {
+        return false;
+    }
+};
 
 /**
  *
@@ -21,14 +34,26 @@ mermaid.initialize({ startOnLoad: false });
  * @returns function to revert the operation (aka clean up function)
  */
 export const injectStyle = (css: string, doc: Document = document, target?: Element) => {
-    const styleElement = doc.createElement("style");
-    styleElement.appendChild(doc.createTextNode(css));
+    let eln: HTMLElement;
+
+    if (validURL(css)) {
+        const linkEln = doc.createElement("link");
+        linkEln.rel = "stylesheet";
+        linkEln.setAttribute("crossorigin", "anonymous");
+        linkEln.href = css;
+        eln = linkEln;
+    } else {
+        const styleEln = doc.createElement("style");
+        styleEln.appendChild(doc.createTextNode(css));
+        eln = styleEln;
+    }
+
     const destination = target || doc.head || doc.getElementsByTagName("head")[0];
-    destination.appendChild(styleElement);
+    destination.appendChild(eln);
 
     // Revert function
     return () => {
-        destination.removeChild(styleElement);
+        destination.removeChild(eln);
     };
 };
 
@@ -145,7 +170,11 @@ export const markdownToImg = async (mdStr: string) => {
     await renderMKbatch();
 
     const dataUrl = await imageFromHTML(container, {
-        cssStyles: [hljsCss, ghMdCss, katexCss],
+        cssStyles: [
+            hljsCss,
+            ghMdCss,
+            "https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css",
+        ],
     });
     if (!dataUrl) throw new Error("Failed to convert html to image. Got null");
     console.log("DATA URL", dataUrl);
