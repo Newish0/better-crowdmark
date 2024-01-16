@@ -22,7 +22,6 @@ const extensions: `.${string}`[] = [
     ".groovy",
     ".h",
     ".hpp",
-    ".h++",
     ".java",
     ".jsx",
     ".js",

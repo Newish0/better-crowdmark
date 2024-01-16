@@ -2,17 +2,20 @@ import ModuleManager from "./bc-modules/ModuleManager";
 import markdownModule from "./bc-modules/markdown";
 import textModule from "./bc-modules/txt";
 import hljsModule from "./bc-modules/hljs";
+import svgModule from "./bc-modules/svg";
+import { debounce } from "@/lib/utils";
 
 /** The target elements Better Crowdmark should run on */
 const BC_TARGETS: string[] = [
-    "label.assigned-submit__upload-clickzone:not(.BT-zone-modified)", // Crowdmark app input
-    ".BT-dev-test-input-container:not(.BT-zone-modified)", // Development test page input
+    ".assignment-question:not(.BC-qroot-modified)", // Crowdmark app input
+    ".BC-dev-test-input-container:not(.BC-qroot-modified)", // Development test page input
 ];
 
 ModuleManager.init();
 ModuleManager.load(markdownModule);
 ModuleManager.load(textModule);
 ModuleManager.load(hljsModule);
+ModuleManager.load(svgModule);
 
 /**
  *
@@ -32,17 +35,25 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
     targetInput.dispatchEvent(changeEvt);
 };
 
+let overlayCleanupFuncs: (() => void)[] = [];
 const injectOverlay = () => {
+    // Cleanup last rendered overlays
+    for (const cleanup of overlayCleanupFuncs) cleanup();
+    overlayCleanupFuncs = [];
+
     // Get list of new zones
-    const submitZones = document.querySelectorAll(BC_TARGETS.join(","));
+    const questionRoots = document.querySelectorAll(BC_TARGETS.join(","));
 
-    submitZones.forEach((zoneEln) => {
+    // console.log(questionRoots);
+
+    for (const qRoot of questionRoots) {
         // const zone = zoneEln as HTMLElement;
-        const zone = zoneEln as HTMLLabelElement;
-        zone.classList.add("BT-zone-modified");
+        const fileZone = qRoot.querySelector("label");
+        const oriInput: HTMLInputElement | null = qRoot.querySelector("input[type='file']");
+        const titleText: HTMLSpanElement | null = qRoot.querySelector(".u-default-text");
 
-        const oriInput: HTMLInputElement | null = zone.querySelector("input[type='file']");
-        const titleText: HTMLSpanElement | null = zone.querySelector(".u-default-text");
+        // Skip if page not ready
+        if (!fileZone || !oriInput) continue;
 
         if (titleText)
             titleText.textContent = `Add images, pdf, ${ModuleManager.supportedFormats(
@@ -95,11 +106,45 @@ const injectOverlay = () => {
 
         overlay.appendChild(bcInput);
 
-        zone.style.position = "relative";
-        zone.appendChild(overlay);
-    });
+        qRoot.classList.add("BC-qroot-modified");
+        fileZone.style.position = "relative";
+        fileZone.appendChild(overlay);
+
+        overlayCleanupFuncs.push(() => {
+            qRoot.classList.remove("BC-qroot-modified");
+            // if (titleText) titleText.textContent = oriTitleText ?? "";
+            fileZone.removeChild(overlay);
+        });
+    }
 };
 
-const observer = new MutationObserver(injectOverlay);
+// const debouncedInjectOverlay = debounce(injectOverlay, 500);
 
-observer.observe(document.body, { subtree: true, childList: true });
+// const mutationCallback: MutationCallback = (
+//     mutationsList: MutationRecord[],
+//     observer: MutationObserver
+// ) => {
+//     const isMutationFromBCNode = Array.from(mutationsList).some((mutation) => {
+//         if (!(mutation.target instanceof HTMLElement)) return;
+
+//         // Check if the mutation is triggered by a node with a class starting with "BC-"
+//         const classes = mutation.target.classList;
+//         const isMutationFromBCNode = Array.from(classes).some((className) =>
+//             className.startsWith("BC-")
+//         );
+
+//         return isMutationFromBCNode;
+//     });
+
+//     if (!isMutationFromBCNode) {
+//         console.log("Mutation observed:");
+//         debouncedInjectOverlay();
+//     }
+// };
+
+const observer = new MutationObserver(debounce(injectOverlay, 500));
+
+observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+});
