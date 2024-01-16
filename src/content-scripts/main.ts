@@ -1,8 +1,4 @@
-import ModuleManager from "./bc-modules/ModuleManager";
-import markdownModule from "./bc-modules/markdown";
-import textModule from "./bc-modules/txt";
-import hljsModule from "./bc-modules/hljs";
-import svgModule from "./bc-modules/svg";
+import ModuleManager, { registerAll as registerAllModules } from "./bc-modules/ModuleManager";
 import { debounce } from "@/lib/utils";
 
 /** The target elements Better Crowdmark should run on */
@@ -12,10 +8,7 @@ const BC_TARGETS: string[] = [
 ];
 
 ModuleManager.init();
-ModuleManager.load(markdownModule);
-ModuleManager.load(textModule);
-ModuleManager.load(hljsModule);
-ModuleManager.load(svgModule);
+registerAllModules();
 
 /**
  *

@@ -12,7 +12,7 @@ export default function () {
 
                     <h1 className="text-3xl font-bold">Better Crowdmark</h1>
                     <p>version {manifest.version}</p>
-                    <p className="py-6 neutral-content">Less time wasted in homework upload.</p>
+                    <p className="py-6 neutral-content">{manifest.description}</p>
 
                     <ul className="menu bg-base-200 w-full">
                         <li>

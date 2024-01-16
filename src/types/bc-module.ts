@@ -5,14 +5,27 @@ export type ParsedFile = File & { name: `${string}.png` };
  */
 export type ParseFunction = (file: File) => ParsedFile | Promise<ParsedFile>;
 
-export type BCModule = () => {
-    /** Name of the module */
+type Author = {
+    name: string;
+    github: `github.com/${string}`;
+};
+
+export type BCModuleInfo = {
+    /** Name of the module (i.e. My Module Name)*/
     name: string;
 
+    /** Slug in kebab case (i.e. my-module-slug) */
+    slug: string;
+
+    /** Short description of what your module does. */
     description?: string;
+
+    authors?: Author[];
 
     /** List of file extensions this module supports (i.e. ".cpp", ".java") */
     extensions: `.${string}`[];
+};
 
+export type BCModule = () => BCModuleInfo & {
     parse: ParseFunction;
 };

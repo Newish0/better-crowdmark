@@ -36,6 +36,11 @@ export default defineConfig({
     },
     build: {
         minify: true,
-        sourcemap: false,
+        sourcemap: true,
+        // rollupOptions: {
+        //     input: {
+        //         // optionsUI: fileURLToPath(new URL("./src/options.html", import.meta.url)),
+        //     },
+        // },
     },
 });

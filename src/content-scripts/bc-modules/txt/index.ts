@@ -4,6 +4,7 @@ import { dataURLToBlob, imageFromHTML, removeExtension } from "../utils";
 const TextModule: BCModule = () => {
     return {
         name: "Text",
+        slug: "text",
         extensions: [".txt"],
         async parse(txtFile: File) {
             const txt = await txtFile.text();

@@ -72,7 +72,16 @@ const extensions: `.${string}`[] = [
 const HLJSModule: BCModule = () => {
     return {
         name: "HighlightJS",
+        slug: "highlight-js",
         extensions,
+        description:
+            "Adds support for many programming languages with syntax highlighting (using HighlighJS).",
+        authors: [
+            {
+                name: "Newish0",
+                github: "github.com/Newish0",
+            },
+        ],
         async parse(codeFile: File) {
             const plainText = await codeFile.text();
             const ext = getExtension(codeFile.name);

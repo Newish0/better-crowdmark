@@ -4,6 +4,7 @@ import { dataURLToBlob, imageFromHTML, removeExtension } from "../utils";
 const svgModule: BCModule = () => {
     return {
         name: "SVG",
+        slug: "svg",
         extensions: [".svg"],
         async parse(svgFile: File) {
             const svgData = await svgFile.text();
