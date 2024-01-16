@@ -44,8 +44,10 @@ const markdownToImg = async (mdStr: string) => {
     const htmlStr = md.render(mdStr);
     container.innerHTML = htmlStr;
 
+    document.body.appendChild(container);
     await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
     await renderMKbatch();
+    document.body.removeChild(container);
 
     const dataUrl = await imageFromHTML(container, {
         cssStyles: [
@@ -61,7 +63,16 @@ const markdownToImg = async (mdStr: string) => {
 const markdownModule: BCModule = () => {
     return {
         name: "Markdown",
+        slug: "markdown",
         extensions: [".md"],
+        description:
+            "Adds markdown file support with markdown math (Katex), mermaid, and more. Implemented using a fork of VSCode's parser, so the results should be quite similar!",
+        authors: [
+            {
+                name: "Newish0",
+                github: "github.com/Newish0",
+            },
+        ],
         async parse(markdownFile: File) {
             const mdImgBlob = await markdownToImg(await markdownFile.text());
             return new File([mdImgBlob], `${removeExtension(markdownFile.name)}.png`) as ParsedFile;
