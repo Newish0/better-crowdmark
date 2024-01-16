@@ -44,8 +44,6 @@ const markdownToImg = async (mdStr: string) => {
     const htmlStr = md.render(mdStr);
     container.innerHTML = htmlStr;
 
-    document.body.appendChild(container);
-
     await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
     await renderMKbatch();
 
