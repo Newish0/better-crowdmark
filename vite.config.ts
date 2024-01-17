@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import webExtension, { readJsonFile } from "vite-plugin-web-extension";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { Flag } from "lucide-react";
 
 function generateManifest() {
     const manifest = readJsonFile("src/manifest.json");
@@ -21,12 +22,12 @@ export default defineConfig({
         react(),
         webExtension({
             manifest: generateManifest,
-            additionalInputs: [
-                "src/options.html",
-                "src/options.tsx",
-                "src/offscreen/index.html",
-                "src/offscreen/main.ts",
-            ],
+            // additionalInputs: [
+            //     "src/options.html",
+            //     "src/options.tsx",
+            //     "src/offscreen/index.html",
+            //     "src/offscreen/main.ts",
+            // ],
         }),
     ],
     resolve: {
@@ -41,6 +42,6 @@ export default defineConfig({
     },
     build: {
         minify: true,
-        sourcemap: true,
+        sourcemap: false,
     },
 });
