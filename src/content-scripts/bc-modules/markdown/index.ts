@@ -10,7 +10,8 @@ import mk, { renderBatch as renderMKbatch } from "@/lib/markdown-it-katex";
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
 
-import { dataURLToBlob, imageFromHTML, removeExtension } from "@/content-scripts/bc-modules/utils";
+import { dataURLToBlob, removeExtension } from "@/content-scripts/bc-modules/utils";
+import { imageFromHtml } from "@/lib/offscreen";
 
 mermaid.initialize({ startOnLoad: false });
 
@@ -50,7 +51,7 @@ const markdownToImg = async (mdStr: string) => {
     await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
     document.body.removeChild(container);
 
-    const dataUrl = await imageFromHTML(container, {
+    const dataUrl = await imageFromHtml(container.innerHTML, {
         cssStyles: [
             hljsCss,
             ghMdCss,

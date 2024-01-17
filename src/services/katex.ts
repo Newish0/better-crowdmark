@@ -1,9 +1,9 @@
-import { RenderKatexRequest, RenderKatexResponse, RuntimeMsgAction } from "@/types/messaging";
+import { RenderKatexRequest, RenderKatexResponse, CSBgRuntimeMsgAction } from "@/types/messaging";
 
 
 export const katexToHtml = async (katex: string, options?: katex.KatexOptions) => {
     const msg: RenderKatexRequest = {
-        action: RuntimeMsgAction.RenderKatex,
+        action: CSBgRuntimeMsgAction.RenderKatex,
         katex,
         options,
     };

@@ -1,5 +1,6 @@
 import { BCModule, ParsedFile } from "@/types/bc-module";
-import { dataURLToBlob, imageFromHTML, removeExtension } from "../utils";
+import { dataURLToBlob, removeExtension } from "../utils";
+import { imageFromHtml } from "@/lib/offscreen";
 
 const svgModule: BCModule = () => {
     return {
@@ -8,7 +9,7 @@ const svgModule: BCModule = () => {
         extensions: [".svg"],
         async parse(svgFile: File) {
             const svgData = await svgFile.text();
-            const dataUrl = await imageFromHTML(svgData, { margin: "0px", width: "min-content" });
+            const dataUrl = await imageFromHtml(svgData, { margin: "0px", width: "min-content" });
             if (!dataUrl) throw new Error("Failed to parse text file.");
             return new File(
                 [await dataURLToBlob(dataUrl)],

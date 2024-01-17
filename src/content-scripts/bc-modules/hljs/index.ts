@@ -1,8 +1,9 @@
 import { BCModule, ParsedFile } from "@/types/bc-module";
-import { dataURLToBlob, getExtension, imageFromHTML, removeExtension } from "../utils";
+import { dataURLToBlob, getExtension, removeExtension } from "../utils";
 
 import hljs from "highlight.js";
 import hljsCss from "highlight.js/styles/github.min.css?raw";
+import { imageFromHtml } from "@/lib/offscreen";
 
 hljs.registerAliases("m", { languageName: "matlab" });
 const extensions: `.${string}`[] = [
@@ -87,7 +88,7 @@ const HLJSModule: BCModule = () => {
             const ext = getExtension(codeFile.name);
             const result = hljs.highlightAuto(plainText, [ext.slice(1)]);
             const html = `<pre style="height: max-content"><code>${result.value}</code></pre>`;
-            const dataUrl = await imageFromHTML(html, { cssStyles: [hljsCss], margin: "0.1rem" });
+            const dataUrl = await imageFromHtml(html, { cssStyles: [hljsCss], margin: "0.1rem" });
             if (!dataUrl) throw new Error("Failed to parse hljs file.");
             return new File(
                 [await dataURLToBlob(dataUrl)],
