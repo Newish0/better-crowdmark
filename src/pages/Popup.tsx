@@ -1,8 +1,8 @@
 import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
-import browser from "webextension-polyfill";
+
 
 export default function () {
-    const manifest = browser.runtime.getManifest();
+    const manifest = chrome.runtime.getManifest();
 
     return (
         <div className="hero min-h-screen bg-base-200">

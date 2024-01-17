@@ -1,5 +1,5 @@
 import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
-import browser from "webextension-polyfill";
+
 import ModuleManager, {
     registerAll as registerAllModules,
 } from "@/content-scripts/bc-modules/ModuleManager";
@@ -10,7 +10,7 @@ registerAllModules();
 
 export default function () {
     const [loadedModules] = useState(ModuleManager.getLoadedModules());
-    const manifest = browser.runtime.getManifest();
+    const manifest = chrome.runtime.getManifest();
 
     return (
         <div className="flex flex-row flex-nowrap gap-3 h-dvh overflow-hidden">

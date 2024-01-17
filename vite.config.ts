@@ -21,7 +21,12 @@ export default defineConfig({
         react(),
         webExtension({
             manifest: generateManifest,
-            additionalInputs: ["src/options.html", "src/options.tsx"],
+            additionalInputs: [
+                "src/options.html",
+                "src/options.tsx",
+                "src/offscreen/index.html",
+                "src/offscreen/main.ts",
+            ],
         }),
     ],
     resolve: {
@@ -37,10 +42,5 @@ export default defineConfig({
     build: {
         minify: true,
         sourcemap: true,
-        // rollupOptions: {
-        //     input: {
-        //         // optionsUI: fileURLToPath(new URL("./src/options.html", import.meta.url)),
-        //     },
-        // },
     },
 });

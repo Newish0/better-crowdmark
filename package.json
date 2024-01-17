@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^2.46.0",
+    "@types/chrome": "^0.0.257",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "@vscode/markdown-it-katex": "^1.0.2",
     "class-variance-authority": "^0.7.0",
@@ -35,14 +36,12 @@
     "@types/node": "^20.11.0",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
-    "@types/webextension-polyfill": "^0.10.0",
     "autoprefixer": "^10.4.16",
     "daisyui": "^4.6.0",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.2",
     "vite": "^5.0.0",
-    "vite-plugin-web-extension": "^4.0.0",
-    "webextension-polyfill": "^0.10.0"
+    "vite-plugin-web-extension": "^4.0.0"
   }
 }
