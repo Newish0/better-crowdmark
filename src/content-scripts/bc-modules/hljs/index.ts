@@ -70,6 +70,13 @@ const extensions: `.${string}`[] = [
     ".zsh",
 ];
 
+const scalingCss = `
+        pre {
+            height: max-content;
+            font-size: 1.2rem;
+        }
+    `
+
 const HLJSModule: BCModule = () => {
     return {
         name: "HighlightJS",
@@ -87,8 +94,12 @@ const HLJSModule: BCModule = () => {
             const plainText = await codeFile.text();
             const ext = getExtension(codeFile.name);
             const result = hljs.highlightAuto(plainText, [ext.slice(1)]);
-            const html = `<pre style="height: max-content"><code>${result.value}</code></pre>`;
-            const dataUrl = await imageFromHtml(html, { cssStyles: [hljsCss], margin: "0.1rem" });
+            const html = `<pre><code>${result.value}</code></pre>`;
+            const dataUrl = await imageFromHtml(html, {
+                cssStyles: [hljsCss, scalingCss],
+                margin: "0.1rem",
+                pixelRatio: 3,
+            });
             if (!dataUrl) throw new Error("Failed to parse hljs file.");
             return new File(
                 [await dataURLToBlob(dataUrl)],

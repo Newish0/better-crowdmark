@@ -15,7 +15,7 @@ import * as htmlToImage from "html-to-image";
  */
 export const imageFromHtml = async (
     html: string,
-    { cssStyles = [], width = "8.5in", margin = "0.5in" }: HTMLToImageOptions = {}
+    { cssStyles = [], width = "8.5in", margin = "0.5in", pixelRatio = 2 }: HTMLToImageOptions = {}
 ) => {
     const root = document.querySelector("#root")!;
 
@@ -69,7 +69,7 @@ export const imageFromHtml = async (
     iframe.height = `${iDoc.body.scrollHeight}px`;
 
     const dataUrl = await htmlToImage.toPng(iDoc.body, {
-        pixelRatio: 2,
+        pixelRatio,
         backgroundColor: "#fff",
     });
 
