@@ -30,7 +30,7 @@ const markdownToImg = async (mdStr: string) => {
     const md = markdownit({
         html: true,
         linkify: true,
-        typographer: true,
+        typographer: false,
         highlight: function (str, lang) {
             if (lang && hljs.getLanguage(lang)) {
                 try {

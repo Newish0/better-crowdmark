@@ -83,7 +83,6 @@ chrome.runtime.onMessage.addListener(async (request: OsHTMLToImageRequest) => {
     console.debug("[Offscreen] receive request");
 
     const pngDataUrl = await imageFromHtml(request.html, request.options);
-    console.log("PNG", pngDataUrl);
 
     const msg: OsHTMLToImageResponse = {
         action: BgOsRuntimeMsgAction.HTMLToImage,
