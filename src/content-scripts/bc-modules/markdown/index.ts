@@ -15,6 +15,12 @@ import { imageFromHtml } from "@/lib/offscreen";
 
 mermaid.initialize({ startOnLoad: false });
 
+const scrollCss = `
+    .markdown-body * {
+        overflow: visible !important;
+    }
+`;
+
 /**
  * Converts markdown string to png blob
  * @param mdStr
@@ -54,6 +60,7 @@ const markdownToImg = async (mdStr: string) => {
     const dataUrl = await imageFromHtml(container.outerHTML, {
         cssStyles: [
             hljsCss,
+            scrollCss,
             "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css",
             "https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css",
         ],
