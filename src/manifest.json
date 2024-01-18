@@ -24,6 +24,9 @@
       ],
       "js": [
         "src/content-scripts/main.ts"
+      ],
+      "css": [
+        "src/content-scripts/addon.css"
       ]
     }
   ],

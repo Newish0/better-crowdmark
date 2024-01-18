@@ -72,24 +72,6 @@ const injectOverlay = () => {
             input?.files && handleFiles(input?.files);
         });
 
-        // TODO: Move styles to CSS
-        Object.assign(overlay.style, {
-            position: "absolute",
-            top: "-5px",
-            left: "-5px",
-            width: "calc(100% + 10px)",
-            height: "calc(100% + 10px)",
-        });
-
-        Object.assign(bcInput.style, {
-            position: "relative",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            opacity: 0,
-        });
-
         overlay.appendChild(bcInput);
 
         qRoot.classList.add("BC-qroot-modified");
