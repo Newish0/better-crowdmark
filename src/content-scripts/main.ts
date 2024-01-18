@@ -57,8 +57,17 @@ const injectOverlay = () => {
 
         // TODO: Lock input while running/parsing
         const handleFiles = async (files: FileList) => {
-            const parsedFiles = await parseFiles(files);
-            if (oriInput) transferData([...(oriInput.files ?? []), ...parsedFiles], oriInput);
+            overlay.classList.remove("BC-overlay-error");
+            overlay.classList.add("BC-overlay-busy");
+            bcInput.disabled = true;
+            try {
+                const parsedFiles = await parseFiles(files);
+                if (oriInput) transferData([...(oriInput.files ?? []), ...parsedFiles], oriInput);
+            } catch (error) {
+                overlay.classList.add("BC-overlay-error");
+            }
+            bcInput.disabled = false;
+            overlay.classList.remove("BC-overlay-busy");
         };
 
         bcInput.addEventListener("drop", (evt) => {
