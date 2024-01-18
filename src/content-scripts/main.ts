@@ -28,16 +28,9 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
     targetInput.dispatchEvent(changeEvt);
 };
 
-let overlayCleanupFuncs: (() => void)[] = [];
 const injectOverlay = () => {
-    // Cleanup last rendered overlays
-    for (const cleanup of overlayCleanupFuncs) cleanup();
-    overlayCleanupFuncs = [];
-
     // Get list of new zones
     const questionRoots = document.querySelectorAll(BC_TARGETS.join(","));
-
-    // console.log(questionRoots);
 
     for (const qRoot of questionRoots) {
         // const zone = zoneEln as HTMLElement;
@@ -103,37 +96,24 @@ const injectOverlay = () => {
         fileZone.style.position = "relative";
         fileZone.appendChild(overlay);
 
-        overlayCleanupFuncs.push(() => {
+        const cleanup = () => {
             qRoot.classList.remove("BC-qroot-modified");
-            // if (titleText) titleText.textContent = oriTitleText ?? "";
-            fileZone.removeChild(overlay);
+            overlay.remove();
+        };
+
+        const qRootObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.target === overlay || overlay.contains(mutation.target)) return;
+                cleanup();
+                qRootObserver.disconnect();
+            });
+        });
+        qRootObserver.observe(qRoot, {
+            subtree: true,
+            childList: true,
         });
     }
 };
-
-// const debouncedInjectOverlay = debounce(injectOverlay, 500);
-
-// const mutationCallback: MutationCallback = (
-//     mutationsList: MutationRecord[],
-//     observer: MutationObserver
-// ) => {
-//     const isMutationFromBCNode = Array.from(mutationsList).some((mutation) => {
-//         if (!(mutation.target instanceof HTMLElement)) return;
-
-//         // Check if the mutation is triggered by a node with a class starting with "BC-"
-//         const classes = mutation.target.classList;
-//         const isMutationFromBCNode = Array.from(classes).some((className) =>
-//             className.startsWith("BC-")
-//         );
-
-//         return isMutationFromBCNode;
-//     });
-
-//     if (!isMutationFromBCNode) {
-//         console.log("Mutation observed:");
-//         debouncedInjectOverlay();
-//     }
-// };
 
 const observer = new MutationObserver(debounce(injectOverlay, 500));
 
