@@ -8,7 +8,7 @@ import markdownItTextualUml from "markdown-it-textual-uml";
 import mk, { renderBatch as renderMKbatch } from "@/lib/markdown-it-katex";
 
 import hljsCss from "highlight.js/styles/github.min.css?raw";
-import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
+// import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
 
 import { dataURLToBlob, removeExtension } from "@/content-scripts/bc-modules/utils";
 import { imageFromHtml } from "@/lib/offscreen";
@@ -51,10 +51,10 @@ const markdownToImg = async (mdStr: string) => {
     await mermaid.run({ nodes: container.querySelectorAll(".mermaid") });
     document.body.removeChild(container);
 
-    const dataUrl = await imageFromHtml(container.innerHTML, {
+    const dataUrl = await imageFromHtml(container.outerHTML, {
         cssStyles: [
             hljsCss,
-            ghMdCss,
+            "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css",
             "https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css",
         ],
     });
