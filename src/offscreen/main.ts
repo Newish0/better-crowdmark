@@ -1,4 +1,4 @@
-import { validURL } from "@/content-scripts/bc-modules/utils";
+import { validURL } from "@/content-scripts/bc-modules/services/utils";
 import {
     BgOsRuntimeMsgAction,
     HTMLToImageOptions,

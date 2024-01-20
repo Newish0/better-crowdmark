@@ -10,8 +10,8 @@ import mk, { renderBatch as renderMKbatch } from "@/lib/markdown-it-katex";
 import hljsCss from "highlight.js/styles/github.min.css?raw";
 // import ghMdCss from "github-markdown-css/github-markdown-light.css?raw";
 
-import { dataURLToBlob, removeExtension } from "@/content-scripts/bc-modules/utils";
-import { imageFromHtml } from "@/lib/offscreen";
+import { dataURLToBlob, removeExtension } from "../../services/utils";
+import { imageFromHtml } from "@/content-scripts/bc-modules/services/utils";
 
 mermaid.initialize({ startOnLoad: false });
 

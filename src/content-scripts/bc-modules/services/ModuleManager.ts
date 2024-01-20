@@ -1,17 +1,10 @@
 import { BCModule, BCModuleInfo, ParseFunction, ParsedFile } from "@/types/bc-module";
 import { getExtension } from "./utils";
 
-import markdownModule from "./markdown";
-import textModule from "./txt";
-import hljsModule from "./hljs";
-import svgModule from "./svg";
-
-export function registerAll() {
-    ModuleManager.load(markdownModule);
-    ModuleManager.load(textModule);
-    ModuleManager.load(hljsModule);
-    ModuleManager.load(svgModule);
-}
+import markdownModule from "@/content-scripts/bc-modules/modules/markdown";
+import textModule from "@/content-scripts/bc-modules/modules/txt";
+import hljsModule from "@/content-scripts/bc-modules/modules/hljs";
+import svgModule from "@/content-scripts/bc-modules/modules/svg";
 
 export default class ModuleManager {
     private static defaultExtensions = [".jpeg", ".jpg", ".png", ".gif", ".webp", ".pdf"];
@@ -38,6 +31,13 @@ export default class ModuleManager {
         }
 
         ModuleManager.loadedModules.push(moduleInfo);
+    }
+
+    public static loadAll() {
+        ModuleManager.load(markdownModule);
+        ModuleManager.load(textModule);
+        ModuleManager.load(hljsModule);
+        ModuleManager.load(svgModule);
     }
 
     public static parse(file: File) {

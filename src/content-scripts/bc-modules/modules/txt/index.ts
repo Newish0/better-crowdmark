@@ -1,6 +1,6 @@
 import { BCModule, ParsedFile } from "@/types/bc-module";
-import { dataURLToBlob, removeExtension } from "../utils";
-import { imageFromHtml } from "@/lib/offscreen";
+import { dataURLToBlob, removeExtension } from "../../services/utils";
+import { imageFromHtml } from "@/content-scripts/bc-modules/services/utils";
 
 const TextModule: BCModule = () => {
     return {

@@ -1,9 +1,9 @@
 import { BCModule, ParsedFile } from "@/types/bc-module";
-import { dataURLToBlob, getExtension, removeExtension } from "../utils";
+import { dataURLToBlob, getExtension, removeExtension } from "../../services/utils";
 
 import hljs from "highlight.js";
 import hljsCss from "highlight.js/styles/github.min.css?raw";
-import { imageFromHtml } from "@/lib/offscreen";
+import { imageFromHtml } from "@/content-scripts/bc-modules/services/utils";
 
 hljs.registerAliases("m", { languageName: "matlab" });
 const extensions: `.${string}`[] = [
@@ -75,7 +75,7 @@ const scalingCss = `
             height: max-content;
             font-size: 1.2rem;
         }
-    `
+    `;
 
 const HLJSModule: BCModule = () => {
     return {

@@ -1,12 +1,10 @@
 import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
 
-import ModuleManager, {
-    registerAll as registerAllModules,
-} from "@/content-scripts/bc-modules/ModuleManager";
+import ModuleManager from "@/content-scripts/bc-modules/services/ModuleManager";
 import { useState } from "react";
 
 ModuleManager.init();
-registerAllModules();
+ModuleManager.loadAll();
 
 export default function () {
     const [loadedModules] = useState(ModuleManager.getLoadedModules());

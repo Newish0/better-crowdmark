@@ -1,4 +1,4 @@
-import ModuleManager, { registerAll as registerAllModules } from "./bc-modules/ModuleManager";
+import ModuleManager from "./bc-modules/services/ModuleManager";
 import { debounce } from "@/lib/utils";
 
 /** The target elements Better Crowdmark should run on */
@@ -8,7 +8,7 @@ const BC_TARGETS: string[] = [
 ];
 
 ModuleManager.init();
-registerAllModules();
+ModuleManager.loadAll();
 
 /**
  *
