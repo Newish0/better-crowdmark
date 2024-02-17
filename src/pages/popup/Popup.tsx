@@ -1,5 +1,5 @@
 import React from "react";
-import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
+// import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
 
 export default function Popup(): JSX.Element {
     const manifest = chrome.runtime.getManifest();
@@ -17,13 +17,13 @@ export default function Popup(): JSX.Element {
                     <ul className="menu bg-base-200 w-full">
                         <li>
                             <a href="/src/pages/options/index.html#settings" target="_blank">
-                                <IconSettings />
+                                {/* <IconSettings /> */}
                                 Settings
                             </a>
                         </li>
                         <li>
                             <a href="/src/pages/options/index.html#about" target="_blank">
-                                <IconInfoSquare />
+                                {/* <IconInfoSquare /> */}
                                 About
                             </a>
                         </li>
