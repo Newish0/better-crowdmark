@@ -8,8 +8,11 @@
  */
 
 import { getExtension } from "@src/utils/fs";
-import markdownParser from "./formats/markdown";
 import { Parser } from "./types";
+
+import markdownParser from "./formats/markdown";
+import textParser from "./formats/txt";
+import codeParser from "./formats/code";
 
 /** Maps extension to the parser */
 const extToParserMap = new Map<string, Parser>();
@@ -20,7 +23,10 @@ const extToParserMap = new Map<string, Parser>();
         ret.extensions.forEach((ext) => extToParserMap.set(ext, p));
     }
 
+    // Register individual parsers
     registerParser(markdownParser);
+    registerParser(textParser);
+    registerParser(codeParser);
 })();
 
 export async function parse(file: File) {
