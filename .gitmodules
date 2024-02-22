@@ -4,3 +4,6 @@
 [submodule "SwiftLaTeX"]
 	path = src/lib/SwiftLaTeX
 	url = https://github.com/SwiftLaTeX/SwiftLaTeX.git
+[submodule "text-as-img"]
+	path = src/externals/text-as-img
+	url = https://github.com/Newish0/text-as-img.git

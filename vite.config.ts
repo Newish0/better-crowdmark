@@ -1,42 +1,76 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import webExtension, { readJsonFile } from "vite-plugin-web-extension";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { Flag } from "lucide-react";
+import { resolve } from "path";
+import fs from "fs";
+import { defineConfig } from "vite";
+import { crx, ManifestV3Export } from "@crxjs/vite-plugin";
 
-function generateManifest() {
-    const manifest = readJsonFile("src/manifest.json");
-    const pkg = readJsonFile("package.json");
+import manifest from "./manifest.json";
+import devManifest from "./manifest.dev.json";
+import pkg from "./package.json";
+
+const root = resolve(__dirname, "src");
+const pagesDir = resolve(root, "pages");
+const assetsDir = resolve(root, "assets");
+const outDir = resolve(__dirname, "dist");
+const publicDir = resolve(__dirname, "public");
+
+const isDev = process.env.__DEV__ === "true";
+
+const extensionManifest = {
+    ...manifest,
+    ...(isDev ? devManifest : ({} as ManifestV3Export)),
+    name: isDev ? `DEV: ${manifest.name}` : manifest.name,
+    version: pkg.version,
+};
+
+// plugin to remove dev icons from prod build
+function stripDevIcons(apply: boolean) {
+    if (apply) return null;
+
     return {
-        name: pkg.displayName,
-        description: pkg.description,
-        version: pkg.version,
-        ...manifest,
+        name: "strip-dev-icons",
+        resolveId(source: string) {
+            return source === "virtual-module" ? source : null;
+        },
+        renderStart(outputOptions: any, inputOptions: any) {
+            const outDir = outputOptions.dir;
+            fs.rm(resolve(outDir, "dev-icon-32.png"), () =>
+                console.log(`Deleted dev-icon-32.png frm prod build`)
+            );
+            fs.rm(resolve(outDir, "dev-icon-128.png"), () =>
+                console.log(`Deleted dev-icon-128.png frm prod build`)
+            );
+        },
     };
 }
 
-// https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [
-        react(),
-        webExtension({
-            manifest: generateManifest,
-            additionalInputs: ["src/offscreen/index.html", "src/offscreen/main.ts"],
-        }),
-    ],
     resolve: {
         alias: {
-            "@": path.resolve(__dirname, "./src"),
-
-            // In dev mode, make sure fast refresh works
-            "/@react-refresh": path.resolve(
-                "node_modules/@vitejs/plugin-react-swc/refresh-runtime.js"
-            ),
+            "@src": root,
+            "@assets": assetsDir,
+            "@pages": pagesDir,
         },
     },
+    plugins: [
+        react(),
+        crx({
+            manifest: extensionManifest as ManifestV3Export,
+            contentScripts: {
+                injectCss: true,
+            },
+        }),
+        stripDevIcons(isDev),
+    ],
+    publicDir,
     build: {
-        minify: true,
-        sourcemap: false,
+        outDir,
+        sourcemap: isDev,
+        emptyOutDir: !isDev,
+        rollupOptions: {
+            input: {
+                offscreen: "src/pages/offscreen/index.html",
+            },
+        },
     },
 });
