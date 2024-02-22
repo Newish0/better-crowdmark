@@ -1,4 +1,4 @@
-import { fileToImage } from "@src/messaging/requestUtils";
+import { fileToImage, getSupportedFormats } from "@src/messaging/requestUtils";
 import { onElementRemoved } from "@src/utils/mutation";
 import { debounce } from "@src/utils/timing";
 
@@ -31,13 +31,10 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
 };
 
 const injectOverlay = () => {
-    const supportedFormats: string[] = [];
-
     // Get list of new zones
     const questionRoots = document.querySelectorAll(BC_TARGETS.join(","));
 
     for (const qRoot of questionRoots) {
-        // const zone = zoneEln as HTMLElement;
         const fileZone = qRoot.querySelector("label");
         const oriInput: HTMLInputElement | null = qRoot.querySelector("input[type='file']");
         const titleText: HTMLSpanElement | null = qRoot.querySelector(".u-default-text");
@@ -45,8 +42,11 @@ const injectOverlay = () => {
         // Skip if page not ready
         if (!fileZone || !oriInput) continue;
 
-        if (titleText)
-            titleText.textContent = `Add images, pdf, ${supportedFormats.join(", ")}... files`;
+        if (titleText) {
+            getSupportedFormats().then((supportedFormats: string[]) => {
+                titleText.textContent = `Add images, pdf, ${supportedFormats.join(", ")}... files`;
+            });
+        }
 
         const overlay = document.createElement("div");
         overlay.classList.add("BC-overlay");
@@ -94,7 +94,10 @@ const injectOverlay = () => {
             overlay.remove();
         };
 
-        onElementRemoved(oriInput, cleanup);
+        onElementRemoved(oriInput, () => {
+            console.log("ELEMENT DESTROYED!");
+            cleanup();
+        });
     }
 };
 

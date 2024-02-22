@@ -1,3 +1,4 @@
+import { supportedFormats } from "@src/parsers";
 import {
     FileToImageRequest,
     MessageRequest,
@@ -7,7 +8,7 @@ import {
 } from "./types";
 
 const OFFSCREEN_DOCUMENT_PATH = "src/pages/offscreen/index.html";
-const OFFSCREEN_TIMEOUT = 60 * 1000; // 60 seconds 
+const OFFSCREEN_TIMEOUT = 30 * 1000; // 30 seconds
 
 export default function bgController(runtime: typeof chrome.runtime) {
     /**
@@ -17,6 +18,9 @@ export default function bgController(runtime: typeof chrome.runtime) {
         switch (request.type) {
             case MessageType.FileToImage:
                 handleFileToImage(request as FileToImageRequest, sender, sendResponse);
+                return true;
+            case MessageType.SupportedFormats:
+                handleSupportedFormats(request, sender, sendResponse);
                 return true;
             default:
                 console.warn("Unhandled message from", sender.url);
@@ -102,5 +106,14 @@ export default function bgController(runtime: typeof chrome.runtime) {
         console.debug("MessageType._OffBgFileToImage response", imageFile);
 
         sendResponse(imageFile);
+    }
+
+    function handleSupportedFormats(
+        request: MessageRequest,
+        sender: chrome.runtime.MessageSender,
+        sendResponse: (formats: string[]) => void
+    ) {
+        const formats = supportedFormats();
+        sendResponse(Array.from(formats));
     }
 }

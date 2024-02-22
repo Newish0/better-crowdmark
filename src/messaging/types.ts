@@ -1,11 +1,12 @@
 export enum MessageType {
     FileToImage,
+    SupportedFormats,
     _OffBgFileToImage,
 }
 
 export type MessageRequest = {
     type: MessageType;
-    data: object;
+    data?: object;
 };
 
 export type FileToImageRequest = MessageRequest & {

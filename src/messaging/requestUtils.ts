@@ -4,7 +4,7 @@
  */
 
 import { deserializeFile, serializeFile } from "./serialization";
-import { FileToImageRequest, MessageType, SerializedFile } from "./types";
+import { FileToImageRequest, MessageRequest, MessageType, SerializedFile } from "./types";
 
 export async function fileToImage(file: File): Promise<File | null> {
     const msg: FileToImageRequest = {
@@ -20,4 +20,12 @@ export async function fileToImage(file: File): Promise<File | null> {
     console.debug("fileToImageRes, imageFile:", imageFile, "was serialized as", serializedFile);
 
     return imageFile;
+}
+
+export async function getSupportedFormats() {
+    const msg: MessageRequest = {
+        type: MessageType.SupportedFormats,
+    };
+    const formats: string[] = await chrome.runtime.sendMessage(msg);
+    return formats;
 }
