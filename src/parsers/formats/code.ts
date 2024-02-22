@@ -112,15 +112,11 @@ const codeParser: Parser = () => {
             ];
 
             const html = `
-                <div>
-                    ${styles.map((style) => Utils.tagFromStyle(style)).join("")}
-                    <pre>
-                        <code>${result.value}</code>
-                    </pre>
-                </div>`;
+            ${styles.map((style) => Utils.tagFromStyle(style)).join("")}<pre><code>${
+                result.value
+            }</code></pre>`;
             const dataUrl = await HtmlToImg.convert(html, {
                 margin: "0.1rem",
-                width:"max(auto, 8.5in)",
                 pixelRatio: 3,
             });
             if (!dataUrl) throw new Error("Failed to parse hljs file.");
