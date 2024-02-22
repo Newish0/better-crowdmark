@@ -7,6 +7,7 @@ import {
 } from "./types";
 
 const OFFSCREEN_DOCUMENT_PATH = "src/pages/offscreen/index.html";
+const OFFSCREEN_TIMEOUT = 60 * 1000; // 60 seconds 
 
 export default function bgController(runtime: typeof chrome.runtime) {
     /**
@@ -22,9 +23,28 @@ export default function bgController(runtime: typeof chrome.runtime) {
         }
     });
 
-    let creating: Promise<void> | null = null; // A global promise to avoid concurrency issues
-    async function setupOffscreenDocument(path = OFFSCREEN_DOCUMENT_PATH) {
+    let offscreenCreating: Promise<void> | null = null; // A global promise to avoid concurrency issues
+    let offscreenTimeoutTracker: ReturnType<typeof setTimeout> | null = null;
+
+    /**
+     * Create offscreen if DNE, and set timer to close it after
+     * the specified number of seconds. If method is called when offscreen
+     * already exist, it will return early and reset the close timer to
+     * the specified number of seconds from the last call.
+     * @param path
+     * @returns
+     */
+    async function setupOffscreenDocument(
+        path = OFFSCREEN_DOCUMENT_PATH,
+        offscreenTimeout = OFFSCREEN_TIMEOUT
+    ) {
         console.debug("Setting up offscreen document");
+
+        if (offscreenTimeoutTracker) clearTimeout(offscreenTimeoutTracker);
+        offscreenTimeoutTracker = setTimeout(
+            () => chrome.offscreen.closeDocument(),
+            offscreenTimeout
+        );
 
         if (await hasOffscreenDocument(path)) {
             console.debug("Offscreen document already exist");
@@ -32,16 +52,16 @@ export default function bgController(runtime: typeof chrome.runtime) {
         }
 
         // create offscreen document
-        if (creating) {
-            await creating;
+        if (offscreenCreating) {
+            await offscreenCreating;
         } else {
-            creating = chrome.offscreen.createDocument({
+            offscreenCreating = chrome.offscreen.createDocument({
                 url: path,
                 reasons: [chrome.offscreen.Reason.DOM_PARSER, chrome.offscreen.Reason.BLOBS],
                 justification: "Converting HTML string to image.",
             });
-            await creating;
-            creating = null;
+            await offscreenCreating;
+            offscreenCreating = null;
         }
 
         console.debug("Offscreen document created");

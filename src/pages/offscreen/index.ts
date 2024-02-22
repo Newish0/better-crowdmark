@@ -1,8 +1,11 @@
 import { deserializeFile, serializeFile } from "@src/messaging/serialization";
-import { MessageRequest, MessageType, SerializedFile, _OffBgFileToImageRequest } from "@src/messaging/types";
+import {
+    MessageRequest,
+    MessageType,
+    SerializedFile,
+    _OffBgFileToImageRequest,
+} from "@src/messaging/types";
 import { parse } from "@src/parsers";
-
-// Md.parse("");
 
 chrome.runtime.onMessage.addListener((request: MessageRequest, sender, sendResponse) => {
     console.debug("[Offscreen] receive request");
