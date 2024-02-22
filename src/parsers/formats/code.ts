@@ -84,7 +84,7 @@ const scalingCss = `
  */
 const codeParser: Parser = () => {
     return {
-        name: "Code Parser",
+        name: "Code",
         slug: "code",
         extensions,
         description:

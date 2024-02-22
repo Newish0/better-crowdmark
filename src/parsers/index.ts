@@ -8,7 +8,7 @@
  */
 
 import { getExtension } from "@src/utils/fs";
-import { Parser } from "./types";
+import { ParseFunction, Parser, ParserInfo } from "./types";
 
 import markdownParser from "./formats/markdown";
 import textParser from "./formats/txt";
@@ -17,9 +17,17 @@ import codeParser from "./formats/code";
 /** Maps extension to the parser */
 const extToParserMap = new Map<string, Parser>();
 
+/** Map parser slug to its info - all registered parsers */
+const registeredParsers = new Map<string, ParserInfo>();
+
 (function init() {
     function registerParser(p: Parser) {
         const ret = p();
+
+        // Disallow re-registration
+        if (registeredParsers.has(ret.slug)) return;
+
+        registeredParsers.set(ret.slug, ret);
         ret.extensions.forEach((ext) => extToParserMap.set(ext, p));
     }
 
@@ -43,4 +51,12 @@ export function isSupported(extension: string) {
 
 export function supportedFormats() {
     return extToParserMap.keys();
+}
+
+/**
+ * List of registered parsers in lexicographic order (by slug)
+ * @returns
+ */
+export function getParseInfoList() {
+    return Array.from(registeredParsers.values()).toSorted((a, b) => a.slug.localeCompare(b.slug));
 }
