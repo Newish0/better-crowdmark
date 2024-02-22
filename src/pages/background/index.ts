@@ -1,5 +1,5 @@
 import bgController from "@src/messaging/bgController";
 
-console.log("background script loaded");
+console.debug("[background] script loaded");
 
 bgController(chrome.runtime);

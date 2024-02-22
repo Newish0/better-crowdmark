@@ -22,7 +22,7 @@ observe();
 // );
 
 try {
-    console.log("content script loaded");
+    console.debug("[content script] better-crowdmark loaded");
 } catch (e) {
     console.error(e);
 }

@@ -94,10 +94,7 @@ const injectOverlay = () => {
             overlay.remove();
         };
 
-        onElementRemoved(oriInput, () => {
-            console.log("ELEMENT DESTROYED!");
-            cleanup();
-        });
+        onElementRemoved(oriInput, () => cleanup);
     }
 };
 

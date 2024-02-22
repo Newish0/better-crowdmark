@@ -1,4 +1,7 @@
 /**
+ * 
+ * > ***This file should ONLY be used in content scripts.***
+ * 
  * Use provided functions to send messages or call background/offscreen
  * functions from the content script or places that needs it.
  */
@@ -12,12 +15,12 @@ export async function fileToImage(file: File): Promise<File | null> {
         data: await serializeFile(file),
     };
 
-    console.debug("fileToImage send msg:", msg);
+    console.debug("[content script] fileToImage send msg:", msg);
 
     const serializedFile: SerializedFile = await chrome.runtime.sendMessage(msg);
     const imageFile = await deserializeFile(serializedFile);
 
-    console.debug("fileToImageRes, imageFile:", imageFile, "was serialized as", serializedFile);
+    console.debug("[content script]fileToImageRes, imageFile:", imageFile, "was serialized as", serializedFile);
 
     return imageFile;
 }

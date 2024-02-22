@@ -42,7 +42,7 @@ export default function bgController(runtime: typeof chrome.runtime) {
         path = OFFSCREEN_DOCUMENT_PATH,
         offscreenTimeout = OFFSCREEN_TIMEOUT
     ) {
-        console.debug("Setting up offscreen document");
+        console.debug("[background] Setting up offscreen document");
 
         if (offscreenTimeoutTracker) clearTimeout(offscreenTimeoutTracker);
         offscreenTimeoutTracker = setTimeout(
@@ -51,7 +51,7 @@ export default function bgController(runtime: typeof chrome.runtime) {
         );
 
         if (await hasOffscreenDocument(path)) {
-            console.debug("Offscreen document already exist");
+            console.debug("[background] Offscreen document already exist");
             return;
         }
 
@@ -68,7 +68,7 @@ export default function bgController(runtime: typeof chrome.runtime) {
             offscreenCreating = null;
         }
 
-        console.debug("Offscreen document created");
+        console.debug("[background] Offscreen document created");
     }
 
     // Check all windows controlled by the service worker to see if one
@@ -93,7 +93,7 @@ export default function bgController(runtime: typeof chrome.runtime) {
     ) {
         await setupOffscreenDocument();
 
-        console.debug("handleFileToImage request:", request);
+        console.debug("[background] handleFileToImage request:", request);
 
         const msg: _OffBgFileToImageRequest = {
             type: MessageType._OffBgFileToImage,
@@ -103,7 +103,7 @@ export default function bgController(runtime: typeof chrome.runtime) {
 
         const imageFile: SerializedFile = await chrome.runtime.sendMessage(msg);
 
-        console.debug("MessageType._OffBgFileToImage response", imageFile);
+        console.debug("[background] MessageType._OffBgFileToImage response", imageFile);
 
         sendResponse(imageFile);
     }
