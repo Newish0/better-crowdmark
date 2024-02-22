@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener((request: MessageRequest, sender, sendRespo
             handleFileToImage(request as _OffBgFileToImageRequest, sender, sendResponse);
             return true;
         default:
-            console.warn("Unhandled message from", sender.url);
+            console.debug("[Offscreen] Unhandled message from", sender.url);
     }
 });
 
@@ -27,7 +27,7 @@ async function handleFileToImage(
     const file = await deserializeFile(request.data);
     if (!file) return null;
 
-    console.log("Got file", file);
+    console.debug("[Offscreen] Got file", file);
 
     const parsedFile = await parse(file);
 
