@@ -44,7 +44,7 @@ const injectOverlay = () => {
 
         if (titleText) {
             getSupportedFormats().then((supportedFormats: string[]) => {
-                titleText.textContent = `Add images, pdf, ${supportedFormats.join(", ")}... files`;
+                titleText.textContent = `Add images, pdf, ${supportedFormats.join(", ")} files`;
             });
         }
 
@@ -94,7 +94,7 @@ const injectOverlay = () => {
             overlay.remove();
         };
 
-        onElementRemoved(oriInput, () => cleanup);
+        onElementRemoved(oriInput, cleanup);
     }
 };
 
