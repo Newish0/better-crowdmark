@@ -8,11 +8,12 @@
  */
 
 import { getExtension } from "@src/utils/fs";
-import { ParseFunction, Parser, ParserInfo } from "./types";
+import { Parser, ParserInfo } from "./types";
 
 import markdownParser from "./formats/markdown";
 import textParser from "./formats/txt";
 import codeParser from "./formats/code";
+import svgParser from "./formats/svg";
 
 /** Maps extension to the parser */
 const extToParserMap = new Map<string, Parser>();
@@ -35,6 +36,7 @@ const registeredParsers = new Map<string, ParserInfo>();
     registerParser(markdownParser);
     registerParser(textParser);
     registerParser(codeParser);
+    registerParser(svgParser);
 })();
 
 export async function parse(file: File) {

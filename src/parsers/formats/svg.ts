@@ -3,7 +3,7 @@ import { ParsedFile, Parser } from "../types";
 import { dataURLToBlob } from "@src/utils/convert";
 import { removeExtension } from "@src/utils/fs";
 
-const svgModule: Parser = () => {
+const svgParser: Parser = () => {
     return {
         name: "SVG",
         slug: "svg",
@@ -18,7 +18,6 @@ const svgModule: Parser = () => {
             const svgData = await svgFile.text();
             const dataUrl = await HtmlToImg.convert(svgData, {
                 margin: "0px",
-                width: "min-content",
             });
             if (!dataUrl) throw new Error("Failed to parse text file.");
             return new File(
@@ -29,4 +28,4 @@ const svgModule: Parser = () => {
     };
 };
 
-export default svgModule;
+export default svgParser;
