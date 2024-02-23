@@ -98,7 +98,7 @@ const injectOverlay = () => {
     }
 };
 
-const observer = new MutationObserver(debounce(injectOverlay, 500));
+const observer = new MutationObserver(debounce(injectOverlay, 50));
 
 const observe = () => {
     observer.observe(document.body, {
