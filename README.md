@@ -10,3 +10,7 @@ No longer are you restricted to only PDF and images.
 ## Getting started 
 
 Download the latest [release](https://github.com/Newish0/better-crowdmark/releases). 
+
+Enable developer mode in [chrome://extensions](chrome://extensions).
+
+Unpack `better-crowdmark-v?.?.?.zip`.
