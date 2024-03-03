@@ -1,12 +1,12 @@
 {
   "name": "better-crowdmark",
   "displayName": "Better Crowdmark",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Less time wasted on homework upload.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JohnBra/web-extension.git"
+    "url": "https://github.com/Newish0/better-crowdmark.git"
   },
   "scripts": {
     "build": "vite build",
