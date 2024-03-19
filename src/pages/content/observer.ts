@@ -1,11 +1,14 @@
 import { fileToImage, getSupportedFormats } from "@src/messaging/requestUtils";
 import { onElementRemoved } from "@src/utils/mutation";
 import { debounce } from "@src/utils/timing";
+import { $questions } from "./stores/toc";
 
 const BC_TARGETS: string[] = [
     ".assignment-question:not(.BC-qroot-modified)", // Crowdmark app input
     ".BC-dev-test-input-container:not(.BC-qroot-modified)", // Development test page input
 ];
+
+const QUESTIONS_SELECTOR = ".assignment-question, .assigned-submit__question, .score-view__assigned-question";
 
 /**
  *
@@ -31,6 +34,14 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
 };
 
 const injectOverlay = () => {
+    // Sync with React components via store
+    $questions.set(
+        Array.from(document.querySelectorAll(QUESTIONS_SELECTOR)).map((root) => ({
+            label: root.querySelector("h3")?.textContent ?? "",
+            root,
+        }))
+    );
+
     // Get list of new zones
     const questionRoots = document.querySelectorAll(BC_TARGETS.join(","));
 
