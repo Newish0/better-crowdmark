@@ -8,7 +8,8 @@ const BC_TARGETS: string[] = [
     ".BC-dev-test-input-container:not(.BC-qroot-modified)", // Development test page input
 ];
 
-const QUESTIONS_SELECTOR = ".assignment-question, .assigned-submit__question, .score-view__assigned-question";
+const QUESTIONS_SELECTOR =
+    ".assignment-question, .assigned-submit__question, .score-view__assigned-question";
 
 /**
  *
@@ -33,14 +34,26 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
     targetInput.dispatchEvent(changeEvt);
 };
 
-const injectOverlay = () => {
+const syncQuestionsStores = () => {
     // Sync with React components via store
-    $questions.set(
-        Array.from(document.querySelectorAll(QUESTIONS_SELECTOR)).map((root) => ({
-            label: root.querySelector("h3")?.textContent ?? "",
-            root,
-        }))
-    );
+    const newQuestions = Array.from(document.querySelectorAll(QUESTIONS_SELECTOR)).map((root) => ({
+        label: root.querySelector("h3")?.textContent ?? "",
+        root,
+    }));
+
+    // Remove duplicates
+    for (let i = newQuestions.length - 1; i >= 0; i--) {
+        const q = newQuestions[i];
+        if (newQuestions.some((q2) => q2.root.contains(q.root) && q !== q2)) {
+            newQuestions.splice(newQuestions.indexOf(q), 1);
+        }
+    }
+
+    $questions.set(newQuestions);
+};
+
+const injectOverlay = () => {
+    syncQuestionsStores();
 
     // Get list of new zones
     const questionRoots = document.querySelectorAll(BC_TARGETS.join(","));
