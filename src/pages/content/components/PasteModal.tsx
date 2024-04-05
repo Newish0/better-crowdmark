@@ -1,9 +1,9 @@
 import { useStore } from "@nanostores/react";
 import { $questions } from "../stores/toc";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Question } from "../types";
 import { IconFile } from "@tabler/icons-react";
-import { getExtension, isWebImageFile } from "@src/utils/fs";
+import { isWebImageFile } from "@src/utils/fs";
 
 export default function QuestionToc() {
     const questions = useStore($questions);
@@ -37,6 +37,7 @@ export default function QuestionToc() {
         question.fileInput.files = dataContainer.files;
         const changeEvt = new Event("change");
         question.fileInput.dispatchEvent(changeEvt);
+        handleClose();
     };
 
     const handleClose = () => {
