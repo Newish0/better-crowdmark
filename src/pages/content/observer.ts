@@ -2,6 +2,7 @@ import { fileToImage, getSupportedFormats } from "@src/messaging/requestUtils";
 import { onElementRemoved } from "@src/utils/mutation";
 import { debounce } from "@src/utils/timing";
 import { $questions } from "./stores/toc";
+import { Question } from "./types";
 
 const BC_TARGETS: string[] = [
     ".assignment-question:not(.BC-qroot-modified)", // Crowdmark app input
@@ -36,10 +37,21 @@ const transferData = (files: FileList | File[], targetInput: HTMLInputElement) =
 
 const syncQuestionsStores = () => {
     // Sync with React components via store
-    const newQuestions = Array.from(document.querySelectorAll(QUESTIONS_SELECTOR)).map((root) => ({
-        label: root.querySelector("h3")?.textContent ?? "",
-        root,
-    }));
+    const newQuestions: Question[] = Array.from(document.querySelectorAll(QUESTIONS_SELECTOR)).map(
+        (root) => ({
+            label: root.querySelector("h3")?.textContent ?? "",
+            root,
+        })
+    );
+
+    // Apply old question info to new
+    const oldQuestions = $questions.get();
+    for (const q of oldQuestions) {
+        const newQ = newQuestions.find((q2) => q2.root === q.root);
+        if (newQ) {
+            newQ.fileInput = q.fileInput;
+        }
+    }
 
     // Remove duplicates
     for (let i = newQuestions.length - 1; i >= 0; i--) {
@@ -50,6 +62,18 @@ const syncQuestionsStores = () => {
     }
 
     $questions.set(newQuestions);
+};
+
+const addFileInputToQuestions = (fileInput: HTMLInputElement) => {
+    $questions.set(
+        $questions.get().map((q) => {
+            console.log("ADD FILE INPUT", q, fileInput, q.root.contains(fileInput));
+            if (q.root.contains(fileInput)) {
+                q.fileInput = fileInput;
+            }
+            return q;
+        })
+    );
 };
 
 const injectOverlay = () => {
@@ -112,6 +136,8 @@ const injectOverlay = () => {
         qRoot.classList.add("BC-qroot-modified");
         fileZone.style.position = "relative";
         fileZone.appendChild(overlay);
+
+        addFileInputToQuestions(bcInput);
 
         const cleanup = () => {
             qRoot.classList.remove("BC-qroot-modified");
