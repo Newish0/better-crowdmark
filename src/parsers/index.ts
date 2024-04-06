@@ -10,6 +10,7 @@
 import { getExtension } from "@src/utils/fs";
 import { Parser, ParserInfo } from "./types";
 
+import defaultParser from "./formats/default";
 import markdownParser from "./formats/markdown";
 import textParser from "./formats/txt";
 import codeParser from "./formats/code";
@@ -33,6 +34,7 @@ const registeredParsers = new Map<string, ParserInfo>();
     }
 
     // Register individual parsers
+    registerParser(defaultParser);
     registerParser(markdownParser);
     registerParser(textParser);
     registerParser(codeParser);
