@@ -2,15 +2,20 @@
 
 
 
-<img align="center" width="250px" src="public/icon/icon-with-shadow.svg">
+
+
+
+<p align="center">
+    <img width="250px" src="public/icon/icon-with-shadow.svg">
+</p>
 
 <h1 align="center">
-  Better Crowdmark
+    Better Crowdmark
 </h1>
 
 
 <p align="center">
-Enhance Crowdmark functionalities; less time wasted on homework upload.
+    Enhance Crowdmark functionalities; less time wasted on homework upload.
 </p>
 
 <p align="center">
