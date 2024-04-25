@@ -1,10 +1,12 @@
 # Better Crowdmark
 Enhance Crowdmark functionalities; less time wasted on homework upload.
 
+## Highlights
+- Extend file format supports by automatically rendering them to images
+ - markdown (with KaTex), code with syntax highlighting, svg etc...
+- Upload from clipboard via paste
+- Table of content side bar for questions at a glance and navigation
 
-
-Automatically render markdown, code with syntax highlighting, svg to images, allowing painless homework upload. 
-No longer are you restricted to only PDF and images. 
  
 
 ## Getting started 
