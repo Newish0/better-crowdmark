@@ -1,9 +1,0 @@
-[submodule "src/lib/better-crowdmark-markdown-it-katex"]
-	path = src/lib/markdown-it-katex
-	url = https://github.com/Newish0/better-crowdmark-markdown-it-katex.git
-[submodule "SwiftLaTeX"]
-	path = src/lib/SwiftLaTeX
-	url = https://github.com/SwiftLaTeX/SwiftLaTeX.git
-[submodule "text-as-img"]
-	path = src/externals/text-as-img
-	url = https://github.com/Newish0/text-as-img.git

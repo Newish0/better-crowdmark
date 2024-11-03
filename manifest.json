@@ -1,51 +1,39 @@
 {
-  "manifest_version": 3,
-  "name": "Better Crowdmark",
-  "description": "Less time wasted on homework upload.",
-  "options_ui": {
-    "open_in_tab": true,
-    "page": "src/pages/options/index.html"
-  },
-  "background": {
-    "service_worker": "src/pages/background/index.ts",
-    "type": "module"
-  },
-  "action": {
-    "default_popup": "src/pages/popup/index.html",
-    "default_icon": {
-      "32": "icon/32.png"
-    }
-  },
-  "icons": {
-    "128": "icon/128.png"
-  },
-  "permissions": [
-    "activeTab",
-    "offscreen"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://*.crowdmark.com/*",
-        "http://localhost:5500/*"
-      ],
-      "js": [
-        "src/pages/content/index.tsx"
-      ],
-      "css": [
-        "contentStyle.css"
-      ]
-    }
-  ],
-  "devtools_page": "src/pages/devtools/index.html",
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "contentStyle.css",
+    "manifest_version": 3,
+    "name": "Better Crowdmark",
+    "description": "Less time wasted on homework upload.",
+    "version": "x.x.x",
+    "icons": {
+        "128": "icon/128.png"
+    },
+    "permissions": [
+        "offscreen"
+    ],
+    "content_security_policy": {},
+    "action": {
+        "default_popup": "src/pages/popup/index.html"
+    },
+    "options_ui": {
+        "open_in_tab": true,
+        "page": "src/pages/options/index.html"
+    },
+    "resources": [
         "icon/128.png",
         "icon/32.png"
-      ],
-      "matches": []
-    }
-  ]
+    ],
+    "background": {
+        "service_worker": "src/pages/background/index.ts",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.crowdmark.com/*",
+                "http://localhost:5500/*"
+            ],
+            "js": [
+                "src/pages/content/index.tsx"
+            ]
+        }
+    ]
 }

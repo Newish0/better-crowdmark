@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { IconSettings, IconInfoSquare } from "@tabler/icons-react";
-import { getParseInfoList } from "@src/parsers";
+import { useAllModuleInfo } from "@/hooks/converter";
 
 export default function Options(): JSX.Element {
-    const [parsers] = useState(getParseInfoList());
+    const modInfoList = useAllModuleInfo();
     const manifest = chrome.runtime.getManifest();
 
     return (
@@ -19,9 +17,9 @@ export default function Options(): JSX.Element {
                         <details open>
                             <summary>Modules</summary>
                             <ul>
-                                {parsers.map((p) => (
-                                    <li key={p.slug}>
-                                        <a href={`#module-${p.slug}`}>{p.name}</a>
+                                {modInfoList.map((mod) => (
+                                    <li key={mod.slug}>
+                                        <a href={`#module-${mod.slug}`}>{mod.name}</a>
                                     </li>
                                 ))}
                             </ul>
@@ -33,39 +31,23 @@ export default function Options(): JSX.Element {
                 </ul>
             </div>
 
-            <div className="my-6 space-y-3 overflow-auto">
+            <div className="flex-1 my-6 space-y-3 overflow-auto">
                 <section>
                     <h2 className="text-3xl font-semibold">Modules</h2>
                     <div className="divider"></div>
                     <div className="space-y-4">
-                        {parsers.map((p) => (
-                            <div key={p.slug} id={`module-${p.slug}`}>
-                                <h3 className="text-xl font-medium my-1">
-                                    {p.name}
-                                    {p.authors?.length ? (
-                                        <span className="text-info text-sm mx-2">
-                                            by
-                                            {p.authors?.map((a) => (
-                                                <a
-                                                    href={`https://${a.github}`}
-                                                    key={a.github}
-                                                    className="mx-1"
-                                                >
-                                                    {a.name}
-                                                </a>
-                                            ))}
-                                        </span>
-                                    ) : null}
-                                </h3>
+                        {modInfoList.map((mod) => (
+                            <div key={mod.slug} id={`module-${mod.slug}`}>
+                                <h3 className="text-xl font-medium my-1">{mod.name}</h3>
                                 <div className="bg-base-200 p-4 rounded-box">
                                     <div className="flex gap-2 flex-wrap flex-row">
-                                        {p.extensions.map((ext) => (
+                                        {mod.extensions.map((ext) => (
                                             <span className="badge badge-neutral" key={ext}>
                                                 {ext}
                                             </span>
                                         ))}
                                     </div>
-                                    <p className="text-base my-2">{p.description}</p>
+                                    <p className="text-base my-2">{mod.description}</p>
                                 </div>
                             </div>
                         ))}

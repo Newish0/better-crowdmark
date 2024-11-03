@@ -1,0 +1,102 @@
+.inputContainer {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(white, white) padding-box,
+        /* Inner background color */ linear-gradient(to bottom right, #8bce36, #00dbd7) border-box; /* Gradient border */
+    border: 4px solid transparent; /* Transparent border to show gradient */
+    box-shadow: 0px 4px 8px rgba(139, 206, 54, 0.3), 0px 6px 12px rgba(0, 219, 215, 0.3);
+    transition: box-shadow 0.5s ease, background 0.5s ease;
+    animation: fade-in 0.5s ease normal;
+}
+
+.inputContainer:hover {
+    background: linear-gradient(white, white) padding-box,
+        /* Inner background color */ linear-gradient(to top left, #8bce36, #00dbd7) border-box; /* Gradient border */
+    box-shadow: 0px 4px 16px #8bce36, 0px 6px 24px #00dbd7;
+}
+
+.inputContainerContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+
+    /* Make this element a container for queries */
+    container-type: inline-size;
+}
+
+.inputContainerText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inputContainerSupportedExts {
+    font-size: small;
+    opacity: 0.8;
+}
+
+.inputContainerPlusIcon {
+    display: none;
+}
+
+@container (width < 200px) {
+    .inputContainerText,
+    .inputContainerSupportedExts {
+        display: none;
+    }
+
+    .inputContainerPlusIcon {
+        display: block;
+    }
+}
+
+.input {
+    display: none;
+}
+
+.dragOver {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0px 4px 16px #8bce36, 0px 6px 24px #00dbd7, 0 0 0 0 rgba(139, 206, 54, 0.5);
+        scale: 1;
+    }
+    50% {
+        scale: 1.005;
+    }
+    70% {
+        box-shadow: 0px 4px 16px #8bce36, 0px 6px 24px #00dbd7, 0 0 10px 20px rgba(139, 206, 54, 0);
+    }
+    100% {
+        box-shadow: 0px 4px 16px #8bce36, 0px 6px 24px #00dbd7, 0 0 0 0 rgba(139, 206, 54, 0);
+        scale: 1;
+    }
+}
+
+@keyframes border-shift {
+    0% {
+        background: linear-gradient(white, white) padding-box,
+            linear-gradient(to bottom right, #8bce36, #00dbd7) border-box;
+    }
+    100% {
+        background: linear-gradient(white, white) padding-box,
+            linear-gradient(to bottom right, #00dbd7, #8bce36) border-box;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

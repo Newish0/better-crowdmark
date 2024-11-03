@@ -1,0 +1,64 @@
+.modal {
+    width: min(100%, 1000px);
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    animation: fade-out 0.2s ease normal forwards;
+}
+
+.modal::backdrop {
+    backdrop-filter: blur(5px) brightness(0.9);
+}
+
+.modal[open] {
+    animation: fade-in 0.2s ease normal;
+}
+
+@keyframes fade-in {
+    from {
+        scale: 0;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+        scale: 1;
+        display: block;
+    }
+    100% {
+        opacity: 0;
+        scale: 0;
+        display: none;
+    }
+}
+
+.modalContainer {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.modalContent {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 20px;
+}
+
+.modalCloseForm {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.modalCloseForm button {
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

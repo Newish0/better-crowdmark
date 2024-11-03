@@ -1,31 +1,52 @@
-import observe from "./observer";
-
 import { createRoot } from "react-dom/client";
-import QuestionToc from "./components/QuestionToc";
-import PasteModal from "./components/PasteModal";
+import { PasteModal } from "./components/PasteModel";
+import { QuestionInput } from "./components/QuestionInput";
+import { createOverlayRoot } from "./overlay";
+import { QuestionTracker } from "./QuestionTracker";
+import { $questions } from "./stores/questions";
 
-observe();
+const questionTracker = new QuestionTracker(
+    ".assigned-submit__question, .score-view__assigned-question", // FIXME: sort of need more investigation: .assignment-question includes .assigned-submit__question
+    "input[type='file']:not(.bc-root input)"
+);
 
-const questionTocRoot = document.createElement("div");
-questionTocRoot.id = "__q-toc-root";
-document.body.appendChild(questionTocRoot);
+const questionRoots: ReturnType<typeof createOverlayRoot>[] = [];
 
-const pasteModalRoot = document.createElement("div");
-pasteModalRoot.id = "__q-paste-modal-root";
-document.body.appendChild(pasteModalRoot);
+questionTracker.subscribe((questions) => {
+    $questions.set(questions);
 
-const questionRootContainer = document.querySelector("#__q-toc-root");
-if (!questionRootContainer) throw new Error("Can't find Question TOC root element");
-const questionReactRoot = createRoot(questionRootContainer);
-questionReactRoot.render(<QuestionToc />);
+    questionTracker.pause();
 
-const pasteModalRootContainer = document.querySelector("#__q-paste-modal-root");
-if (!pasteModalRootContainer) throw new Error("Can't find Paste Modal root element");
-const pasteModalReactRoot = createRoot(pasteModalRootContainer);
-pasteModalReactRoot.render(<PasteModal />);
+    for (const root of questionRoots) {
+        root.unmount();
+    }
 
-try {
-    console.debug("[content script] better-crowdmark loaded");
-} catch (e) {
-    console.error(e);
-}
+    for (const question of questions) {
+        if (!question.fileInput) continue;
+
+        const overlaidElement = question.fileInput?.labels?.[0];
+        if (!overlaidElement) continue;
+
+        const root = createOverlayRoot(overlaidElement);
+        root.render(<QuestionInput question={question} />);
+        overlaidElement.style.opacity = "0";
+        overlaidElement.style.pointerEvents = "none";
+
+        // Apply fix for drop zone to allow our glow effect to be visible
+        const dropZoneTile: HTMLElement | null = question.element.querySelector(".drop-zone-tile");
+        if (dropZoneTile) dropZoneTile.style.overflow = "visible";
+
+        questionRoots.push(root);
+    }
+
+    console.log("questions", questions);
+
+    questionTracker.resume();
+});
+
+const modalRootEln = document.createElement("div");
+modalRootEln.id = "modal-root";
+document.body.appendChild(modalRootEln);
+const modalRoot = createRoot(modalRootEln);
+
+modalRoot.render(<PasteModal />);

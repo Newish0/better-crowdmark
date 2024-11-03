@@ -1,76 +1,40 @@
-import react from "@vitejs/plugin-react-swc";
-import { resolve } from "path";
-import fs from "fs";
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { crx, ManifestV3Export } from "@crxjs/vite-plugin";
 
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import manifest from "./manifest.json";
-import devManifest from "./manifest.dev.json";
 import pkg from "./package.json";
 
-const root = resolve(__dirname, "src");
-const pagesDir = resolve(root, "pages");
-const assetsDir = resolve(root, "assets");
-const outDir = resolve(__dirname, "dist");
-const publicDir = resolve(__dirname, "public");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const isDev = process.env.__DEV__ === "true";
-
-const extensionManifest = {
-    ...manifest,
-    ...(isDev ? devManifest : ({} as ManifestV3Export)),
-    name: isDev ? `DEV: ${manifest.name}` : manifest.name,
+const transformedManifest: ManifestV3Export = {
+    ...(manifest as any),
     version: pkg.version,
 };
 
-// plugin to remove dev icons from prod build
-function stripDevIcons(apply: boolean) {
-    if (apply) return null;
-
-    return {
-        name: "strip-dev-icons",
-        resolveId(source: string) {
-            return source === "virtual-module" ? source : null;
-        },
-        renderStart(outputOptions: any, inputOptions: any) {
-            const outDir = outputOptions.dir;
-            fs.rm(resolve(outDir, "dev-icon-32.png"), () =>
-                console.log(`Deleted dev-icon-32.png frm prod build`)
-            );
-            fs.rm(resolve(outDir, "dev-icon-128.png"), () =>
-                console.log(`Deleted dev-icon-128.png frm prod build`)
-            );
-        },
-    };
-}
-
+// https://vite.dev/config/
 export default defineConfig({
-    resolve: {
-        alias: {
-            "@src": root,
-            "@assets": assetsDir,
-            "@pages": pagesDir,
+    plugins: [react(), crx({ manifest: transformedManifest })],
+
+    server: {
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            port: 5173,
         },
     },
-    plugins: [
-        react(),
-        crx({
-            manifest: extensionManifest as ManifestV3Export,
-            contentScripts: {
-                injectCss: true,
-            },
-        }),
-        stripDevIcons(isDev),
-    ],
-    publicDir,
+
     build: {
-        outDir,
-        sourcemap: isDev,
-        emptyOutDir: !isDev,
-        rollupOptions: {
-            input: {
-                offscreen: "src/pages/offscreen/index.html",
-            },
+        sourcemap: true,
+    },
+
+    resolve: {
+        alias: {
+            "@": resolve(__dirname, "./src"),
         },
     },
 });
