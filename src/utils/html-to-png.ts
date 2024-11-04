@@ -1,5 +1,5 @@
 import { toPng } from "html-to-image";
-import { ResourceInliner } from "./resource-inliner-service";
+import { ResourceInliner } from "@/lib/resource-inliner-service";
 
 type ToImageOptions = Parameters<typeof toPng>[1];
 
@@ -186,6 +186,7 @@ export async function htmlToPngDataUrl(
         };
 
         const dataUrl = await toPng(iframeBody, toPngOptions);
+
         return dataUrl;
     } catch (error) {
         throw new Error(
@@ -195,7 +196,7 @@ export async function htmlToPngDataUrl(
         );
     } finally {
         // Cleanup
-        if (iframe.parentNode) {
+        if (iframe.parentNode && !import.meta.env.DEV) {
             iframe.parentNode.removeChild(iframe);
         }
     }

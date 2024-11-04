@@ -32,7 +32,6 @@ function createConverter(modules: Module[]) {
     };
 }
 
-// const converter = createConverter([bypassModule]);
 const converter = createConverter([bypassModule, codeSyntaxHighlightModule, markdownModule]);
 
 export const [registerConverter, getConverter] = defineProxyService("Converter", () => converter);

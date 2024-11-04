@@ -2,9 +2,9 @@ import hljs from "highlight.js";
 import markdownit from "markdown-it";
 
 import mk from "@vscode/markdown-it-katex";
-// import mt from "markdown-it-textual-uml";
 
 import oneDarkLightCSS from "highlight.js/styles/atom-one-light.min.css?raw";
+// import { createMermaidPlugin } from "@/lib/markdown-it-mermaid";
 
 const md = markdownit({
     html: true,
@@ -30,12 +30,16 @@ const styles = [
 ];
 
 md.use(mk);
-// md.use(mt);
+
+// const { plugin: markdownItMermaid, renderQueuedDiagrams: renderQueuedMermaidDiagrams } =
+//     createMermaidPlugin();
+
+// md.use(markdownItMermaid, {});
 
 export async function convertMarkdownToHtml(mdStr: string): Promise<string> {
-    const html = `<div>${styles.join("")}<div class="markdown-body">${md.render(
-        mdStr
-    )}</div></div>`;
+    let html = `<div>${styles.join("")}<div class="markdown-body">${md.render(mdStr)}</div></div>`;
+
+    // html = await renderQueuedMermaidDiagrams(html);
 
     return html;
 }

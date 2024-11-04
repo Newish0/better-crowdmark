@@ -5,7 +5,7 @@ import { removeExtension } from "@/utils/path";
 
 const spacingCss = `
     body {
-        margin: 2rem;
+        padding: 2rem;
     }
 }`;
 

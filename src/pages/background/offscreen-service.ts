@@ -4,6 +4,8 @@ import { onMessage, sendMessage } from "@/messaging/bg-offscreen";
 import { type htmlToPngDataUrl } from "@/utils/html-to-png";
 
 export class OffscreenService {
+    private static readonly DEFAULT_TIMEOUT = import.meta.env.DEV ? 3600 * 1000 : 30 * 1000; // 30 seconds by default in production
+
     private static instance: OffscreenService;
     private offscreenCreating: Promise<void> | null = null;
     private offscreenTimeoutTracker: ReturnType<typeof setTimeout> | null = null;
@@ -13,7 +15,7 @@ export class OffscreenService {
 
     private constructor(
         private readonly documentPath: string = "src/pages/offscreen/index.html",
-        private readonly timeout: number = 30 * 1000 // 30 seconds
+        private readonly timeout: number = OffscreenService.DEFAULT_TIMEOUT
     ) {
         this.setupMessageListener();
     }

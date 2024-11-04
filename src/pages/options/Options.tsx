@@ -1,4 +1,5 @@
 import { useAllModuleInfo } from "@/hooks/converter";
+import { ConversionTester } from "./ConversionTester";
 
 export default function Options(): JSX.Element {
     const modInfoList = useAllModuleInfo();
@@ -52,6 +53,12 @@ export default function Options(): JSX.Element {
                             </div>
                         ))}
                     </div>
+                </section>
+
+                <section>
+                    <h2 className="text-3xl font-semibold">Conversion Tester</h2>
+                    <div className="divider"></div>
+                    <ConversionTester />
                 </section>
 
                 <section>
