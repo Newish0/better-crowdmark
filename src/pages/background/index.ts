@@ -1,5 +1,15 @@
-import bgController from "@src/messaging/bgController";
+import { registerConverter } from "./converter/index";
+import { OffscreenService } from "./offscreen-service";
 
-console.debug("[background] script loaded");
+registerConverter();
 
-bgController(chrome.runtime);
+chrome.runtime.onInstalled.addListener(() => {
+    OffscreenService.getInstance()
+        .testOffscreen()
+        .then(() => {
+            /* empty */
+        })
+        .catch((error) => {
+            console.error("Error testing offscreen:", error);
+        });
+});

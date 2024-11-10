@@ -1,0 +1,51 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 1rem;
+    min-height: 60vh;
+}
+
+.questionsPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.questionsPanel button {
+    width: 100%;
+}
+
+.questionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.questionsContainer input {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.questionsContainer label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.previewContainer {
+    width: 100%;
+    height: 100%;
+    display: block;
+    max-height: 80vh;
+}
+
+.errorMessage {
+    color: #cb3535;
+    text-align: center;
+    border: 2px solid #cb3535;
+    padding: 0.5rem;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
