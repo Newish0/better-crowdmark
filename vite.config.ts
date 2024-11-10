@@ -30,6 +30,13 @@ export default defineConfig({
 
     build: {
         sourcemap: true,
+
+        rollupOptions: {
+            input: {
+                /* Entry point for offscreen document */
+                offscreen: "src/pages/offscreen/index.html",
+            },
+        },
     },
 
     resolve: {

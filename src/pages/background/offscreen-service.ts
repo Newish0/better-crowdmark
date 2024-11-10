@@ -121,6 +121,8 @@ export class OffscreenService {
      * Creates the offscreen document with specified reasons and justification
      */
     private async createOffscreenDocument(): Promise<void> {
+        console.log("CREATE OFFSCREEN FROM", this.documentPath);
+
         return chrome.offscreen.createDocument({
             url: this.documentPath,
             reasons: [chrome.offscreen.Reason.DOM_PARSER, chrome.offscreen.Reason.BLOBS],

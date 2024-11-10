@@ -1,11 +1,10 @@
 import { createRoot } from "react-dom/client";
 import { PasteModal } from "./components/PasteModel";
 import { QuestionInput } from "./components/QuestionInput";
+import QuestionTOC from "./components/QuestionTOC";
 import { createOverlayRoot } from "./overlay";
 import { QuestionTracker } from "./QuestionTracker";
-import QuestionTOC from "./components/QuestionTOC";
 import { $questions } from "./stores/questions";
-import { createIsolatedElement } from "@webext-core/isolated-element";
 
 const questionTracker = new QuestionTracker(
     ".assigned-submit__question, .score-view__assigned-question", // FIXME: sort of need more investigation: .assignment-question includes .assigned-submit__question
@@ -58,18 +57,3 @@ tocRootEln.id = "toc-root";
 document.body.appendChild(tocRootEln);
 const tocRoot = createRoot(tocRootEln);
 tocRoot.render(<QuestionTOC />);
-
-// const { parentElement, isolatedElement } = await createIsolatedElement({
-//     name: "modal-root",
-//     // css: {
-//     //     url: chrome.runtime.getURL(indexCss),
-//     // },
-//     css: {
-//         url: import("./index.css?url")
-//     }
-//     isolateEvents: true, // or array of event names to isolate, e.g., ['click', 'keydown']
-// });
-// // document.body.appendChild(parentElement);
-
-// // const modalRoot = createRoot(isolatedElement);
-// // modalRoot.render(<PasteModal />);
