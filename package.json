@@ -19,6 +19,7 @@
     "@nanostores/react": "^0.7.2",
     "@types/node": "^22.8.1",
     "@vscode/markdown-it-katex": "^1.1.0",
+    "@webext-core/isolated-element": "^1.1.2",
     "@webext-core/messaging": "^2.0.2",
     "@webext-core/proxy-service": "^1.2.0",
     "highlight.js": "^11.10.0",

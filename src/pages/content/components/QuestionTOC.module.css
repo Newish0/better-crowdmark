@@ -1,0 +1,73 @@
+.container {
+    position: fixed;
+    right: 0;
+    top: 15%;
+    background: linear-gradient(to bottom right, #8bce36, #00dbd7);
+    border-radius: 8px 0 0 8px;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-width: 150px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.container:hover {
+    width: 150px;
+    height: auto;
+    box-shadow: 0px 4px 8px rgba(139, 206, 54, 0.3), 0px 6px 12px rgba(0, 219, 215, 0.3);
+    border-radius: 8px;
+}
+
+.list {
+    list-style-type: none;
+    padding: 16px;
+    margin: 0;
+    width: 150px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.listVisible {
+    opacity: 1;
+}
+
+.listItem {
+    cursor: pointer;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+}
+
+.listItem:hover {
+    background-color: #e0e0e0;
+    transform: translateX(5px);
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.container:hover .icon {
+    opacity: 0;
+}

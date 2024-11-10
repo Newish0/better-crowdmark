@@ -24,6 +24,8 @@ export function PasteModal() {
 
     useEffect(() => {
         const handlePaste = (evt: ClipboardEvent) => {
+            resetModalContent();
+
             const dT: DataTransfer | null = evt.clipboardData || (window as any).clipboardData;
             let file = dT?.files[0];
             const txtData = dT?.getData("text");
@@ -52,10 +54,6 @@ export function PasteModal() {
         document.addEventListener("paste", handlePaste);
         return () => document.removeEventListener("paste", handlePaste);
     }, []);
-
-    useEffect(() => {
-        setSelectedQuestion(null);
-    }, [pastedContent, questions]);
 
     const resetModalContent = () => {
         setPastedContent(null);
